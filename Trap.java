@@ -23,8 +23,20 @@ public class Trap {
         return TrapList;
     }
 
+    public static String type () {
+        return "Trap" ;
+    }
+
     public String toString() {
-        return "" + this.trap + "";
+        if (this.trap == TrapType.MouseTrap) {
+            return "\u001B[31m" +"MST" +  "\u001B[0m" ;
+        }
+        else if (this.trap == TrapType.Bomb) {
+            return "\u001B[31m" +"BMB" +  "\u001B[0m";
+        }
+        else  { //(this.trap  == TrapType.TNT)
+            return "\u001B[31m" +"TNT" +  "\u001B[0m" ;
+        }
     }
 
 }

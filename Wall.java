@@ -17,7 +17,16 @@ public class Wall {
         return WallList;
     }
 
+    public static String type () {
+        return "Wall" ;
+    }
+
     public String toString() {
-        return "" + this.wall + "";
+        if (this.wall  == WallType.BreakableWall) {
+            return "\u001B[33m" + "BWL" + "\u001B[0m" ;
+        }
+        else {
+            return "\u001B[33m" + "UWL" + "\u001B[0m" ;
+        }
     }
 }
