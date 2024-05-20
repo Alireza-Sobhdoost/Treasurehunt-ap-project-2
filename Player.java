@@ -13,6 +13,8 @@ public class Player {
     int SpecialMoveLeft  ;
 
     int[] src ;
+    int[] cur_loc ;
+    int[] specialMove = {3,3,6};
 
     public Player (int[] SpecialMoveCounter) {
 //        this.playername = playername ;
@@ -22,6 +24,8 @@ public class Player {
         this.SpecialMoveCounter = SpecialMoveCounter;
         this.SpecialMoveLeft = Sum_list(this.SpecialMoveCounter) ;
         this.src = new int [2] ;
+        this.cur_loc = new int [2] ;
+        this.specialMove = specialMove ;
         PlayerList.add(this) ;
     }
 
