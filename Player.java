@@ -50,30 +50,30 @@ public class Player {
         System.out.println("----------------"+this.toString()+"'s turn . Please make a move or use one of ypu special moves if you have some ----------------");
         if (this.cur_loc[0] != 0 ){
             if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
-                System.out.println("[u] move Up");
+                System.out.println("[↑] move Up");
                 alowed_to_move[0] = true ;
             }
         }
         if (this.cur_loc[0] != 9){
             if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
-                System.out.println("[d] move down");
+                System.out.println("[↓] move down");
                 alowed_to_move[1] = true ;
             }
         }
         if (this.cur_loc[1] != 0){
             if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
-                System.out.println("[l] move left");
+                System.out.println("[←] move left");
                 alowed_to_move[2] = true ;
             }
         }
         if (this.cur_loc[1] != 19){
             if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
-                System.out.println("[r] move right");
+                System.out.println("[→] move right");
                 alowed_to_move[3] = true ;
             }
         }
         if (this.specialMove[0] != 0){
-            System.out.println("[x] Destruction");
+            System.out.println("[d] Destruction");
             alowed_to_move[4] = true ;
         }
         if (this.specialMove[1] != 0){

@@ -38,26 +38,26 @@ public class Main implements GameBoard {
 
          }
          if (numberOfPlayers == 2) {
-             GameBoard.game_board [9][0] = players[0].toString() ;
+             GameBoard.game_board [9][0] = players[0] ;
              players[0].src[0] = 9 ;  players[0].src[1] = 0 ;
              players[0].cur_loc[0] = 9 ;  players[0].cur_loc[1] = 0 ;
-             GameBoard.game_board [0][19] = players[1].toString() ;
+             GameBoard.game_board [0][19] = players[1] ;
              players[1].src[1] = 0 ;  players[1].src[1] = 19 ;
              players[1].cur_loc[0] = 0 ;  players[1].cur_loc[1] = 19 ;
 
 
          }
          else if (numberOfPlayers == 4) {
-             GameBoard.game_board [9][0] = players[0].toString() ;
+             GameBoard.game_board [9][0] = players[0] ;
              players[0].src[0] = 9 ;  players[0].src[1] = 0 ;
              players[0].cur_loc[0] = 9 ;  players[0].cur_loc[1] = 0 ;
-             GameBoard.game_board [0][19] = players[1].toString() ;
+             GameBoard.game_board [0][19] = players[1] ;
              players[1].src[1] = 0 ;  players[1].src[1] = 19 ;
              players[1].cur_loc[0] = 0 ;  players[1].cur_loc[1] = 19 ;
-             GameBoard.game_board [0][0] = players[2].toString() ;
+             GameBoard.game_board [0][0] = players[2];
              players[2].src[0] = 0 ;  players[2].src[1] = 0 ;
              players[2].cur_loc[0] = 0 ;  players[2].cur_loc[1] = 0 ;
-             GameBoard.game_board [9][19] = players[3].toString() ;
+             GameBoard.game_board [9][19] = players[3] ;
              players[3].src[0] = 9 ;  players[3].src[1] = 19 ;
              players[3].cur_loc[0] = 9 ;  players[3].cur_loc[1] = 19 ;
 
@@ -68,7 +68,7 @@ public class Main implements GameBoard {
                  int row = random.nextInt(10);
                  int column = random.nextInt(20);
                  if (GameBoard.game_board[row][column].equals("   ")) {
-                     GameBoard.game_board[row][column] = wall.toString();
+                     GameBoard.game_board[row][column] = wall;
                      break;
                  }
              }
@@ -81,7 +81,7 @@ public class Main implements GameBoard {
                  int row = random.nextInt(10);
                  int column = random.nextInt(20);
                  if (GameBoard.game_board[row][column].equals("   ")) {
-                     GameBoard.game_board[row][column] = trap.toString();
+                     GameBoard.game_board[row][column] = trap;
                      break;
                  }
              }
@@ -152,22 +152,22 @@ public class Main implements GameBoard {
 
     public static void move (Player player , char move , int dst){
          if (move == 'u') {
-             GameBoard.game_board[player.cur_loc[0] - dst][player.cur_loc[1]] = player.toString();
+             GameBoard.game_board[player.cur_loc[0] - dst][player.cur_loc[1]] = player;
              GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1]] = "   " ;
              player.cur_loc[0] -= dst  ;
          }
         if (move == 'd') {
-            GameBoard.game_board[player.cur_loc[0] + dst][player.cur_loc[1]] = player.toString();
+            GameBoard.game_board[player.cur_loc[0] + dst][player.cur_loc[1]] = player;
             GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1]] = "   " ;
             player.cur_loc[0] += dst  ;
         }
         if (move == 'l') {
-            GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1] - dst] = player.toString();
+            GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1] - dst] = player;
             GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1]] = "   " ;
             player.cur_loc[1] -= dst  ;
         }
         if (move == 'r') {
-            GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1] + dst] = player.toString();
+            GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1] + dst] = player;
             GameBoard.game_board[player.cur_loc[0]][player.cur_loc[1]] = "   " ;
             player.cur_loc[1] += dst  ;
         }
@@ -251,26 +251,58 @@ public class Main implements GameBoard {
               status(players);
               boolean[] allowedToMove = players[who_is_going_to_play].gettosides();
               BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-              while (true) {
-                  char choice_player = scanner.next().charAt(0);
-                  if (choice_player == 'u' && allowedToMove[0]){
-                      move(players[who_is_going_to_play] , 'u',1);
-                      break;
-                  }
-                  if (choice_player == 'd' && allowedToMove[1]){
-                      move(players[who_is_going_to_play] , 'd',1);
-                      break;
-                  }
-                  if (choice_player == 'l' && allowedToMove[2]){
-                      move(players[who_is_going_to_play] , 'l',1);
-                      break;
-                  }
-                  if (choice_player == 'r' && allowedToMove[3]){
-                      move(players[who_is_going_to_play] , 'r',1);
-                      break;
-                  }
+              try {
+                  while (true) {
+                      int input = System.in.read();
 
+                      if (input == 27) { // Escape sequence for arrow keys
+                          System.in.read(); // Consume [
+                          int arrowKey = System.in.read();
+
+                          if (arrowKey == 65 && allowedToMove[0]) {
+                              move(players[who_is_going_to_play], 'u', 1);
+                              break;
+                          } else if (arrowKey == 66 && allowedToMove[1]) {
+                              move(players[who_is_going_to_play], 'd', 1);
+                              break;
+                          } else if (arrowKey == 68 && allowedToMove[2]) {
+                              move(players[who_is_going_to_play], 'l', 1);
+                              break;
+                          } else if (arrowKey == 67 && allowedToMove[3]) {
+                              move(players[who_is_going_to_play], 'r', 1);
+                              break;
+                          }
+                      }
+
+                      if (input == 'd') {
+                          System.out.println("Exiting program...");
+                          break;
+                      }
+                  }
+              } catch (IOException e) {
+                  e.printStackTrace();
               }
+
+//              while (true) {
+//                  char choice_player = scanner.next().charAt(0);
+//                  if (choice_player == 'u' && allowedToMove[0]){
+//                      move(players[who_is_going_to_play] , 'u',1);
+//                      break;
+//                  }
+//                  if (choice_player == 'd' && allowedToMove[1]){
+//                      move(players[who_is_going_to_play] , 'd',1);
+//                      break;
+//                  }
+//                  if (choice_player == 'l' && allowedToMove[2]){
+//                      move(players[who_is_going_to_play] , 'l',1);
+//                      break;
+//                  }
+//                  if (choice_player == 'r' && allowedToMove[3]){
+//                      move(players[who_is_going_to_play] , 'r',1);
+//                      break;
+//                  }
+//
+//              }
 
               who_is_going_to_play += 1;
               who_is_going_to_play %= number_of_players;
