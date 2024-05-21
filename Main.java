@@ -8,6 +8,7 @@ import java.io.IOException;
 public class Main implements GameBoard {
   // ANSI color codes
     public static int number_of_players ;
+    public static List<Treasure> TRSList ;
      public static void generate_random_trap (){
          for (int i = 0 ; i < 30 ; i++) {
              Random random = new Random();
@@ -98,7 +99,17 @@ public class Main implements GameBoard {
 
          }
      }
-
+     public static void randomLocTRS (Treasure treasure) {
+         Random random = new Random();
+         while (true) {
+             int row = random.nextInt(10);
+             int column = random.nextInt(20);
+             if (GameBoard.game_board[row][column].equals("   ")) {
+                 GameBoard.game_board[row][column] = treasure.toString();
+                 break;
+             }
+         }
+     }
      public static void init_menu () {
          System.out.println("==Treasure Hunt==");
          System.out.println("Welcome to our game ! what do you want to do ?");
@@ -113,7 +124,7 @@ public class Main implements GameBoard {
      }
     public static void exitMenu() {
         System.out.println("==Exit==");
-        System.out.println("Do you want to leave this program that soon?");
+        System.out.println("Do you want to leave this game that soon?");
         System.out.println("[y] Yes, I'll be back another time!");
         System.out.println("[n] No, I want to stay!");
     }
@@ -154,30 +165,59 @@ public class Main implements GameBoard {
           init_menu();
           char choice = scanner.nextLine().charAt(0);
           System.out.print("\033[H\033[2J");
-          if (choice == 'p'){
-            play_init_menu();
-            while (true) {
-                number_of_players = scanner.nextInt();
-                if ((number_of_players == 2) ||  (number_of_players == 4)) {
-                    break;
-                }
-                else
-                    System.out.println("the number of players should be 2 or 4 players");
-            }
-
-              generate_random_wall();
-              generate_random_trap();
-              List<Wall> Our_wall = Wall.getWallList() ;
-              List<Trap> Our_trap = Trap.getTrapList() ;
-              for (int i = 0 ; i < number_of_players ; i++) {
-                  new Player(Player.SpecialMoveCounter) ;
+          if (choice == 'e') {
+              exitMenu();
+              char choice_exit;
+              while (true) {
+                  choice_exit = scanner.nextLine().charAt(0);
+                  if (choice_exit == 'y' || choice_exit == 'n') {
+                      break;
+                  }
               }
-              Player[] players = Player.getPlayerList().toArray(new Player[4]) ;
-              initial_set(number_of_players, players ,Our_wall , Our_trap);
-              GameBoard.print_gameboard(players[0].cur_loc);
-              status(players);
+              if (choice_exit == 'y') {
+                  System.out.println("So goodbye !");
+                  break;
+              }
+              if (choice_exit == 'n') {
+                  continue;
+              }
+          }
+          else if (choice == 'p' || choice == 'l'){
+              if (choice == 'p') {
+                  play_init_menu();
+                  while (true) {
+                      number_of_players = scanner.nextInt();
+                      if ((number_of_players == 2) || (number_of_players == 4)) {
+                          break;
+                      } else
+                          System.out.println("the number of players should be 2 or 4 players");
+                  }
+
+                  generate_random_wall();
+                  generate_random_trap();
+                  List<Wall> Our_wall = Wall.getWallList();
+                  List<Trap> Our_trap = Trap.getTrapList();
+                  Treasure TRS = new Treasure();
+                  TRSList = Treasure.getTreasureList();
+
+                  for (int i = 0; i < number_of_players; i++) {
+                      new Player(Player.SpecialMoveCounter);
+                  }
+                  Player[] players = Player.getPlayerList().toArray(new Player[4]);
+                  initial_set(number_of_players, players, Our_wall, Our_trap);
+                  randomLocTRS(TRS);
+                  int[] a = {4, 10};
+                  GameBoard.print_gameboard(players[0].cur_loc);
+                  status(players);
+                  players[0].gettosides();
+              }
+              if (choice == 'l'){
+                  continue;
+              }
+
               break;
           }
+
       }
 
 

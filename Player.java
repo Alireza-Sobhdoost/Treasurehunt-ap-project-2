@@ -45,6 +45,30 @@ public class Player {
         return "\u001B[47m" + "\u001B[30m" + "PL" + this.playerId + "\u001B[0m";
     }
 
+    public void gettosides (){
+        System.out.println("----------------"+this.toString()+"'s turn . Please make a move or use one of ypu special moves if you have some ----------------");
+        if (this.cur_loc[0] != 0){
+            System.out.println("[↑] move Up");
+        }
+        if (this.cur_loc[0] != 9){
+            System.out.println("[↓] move down");
+        }
+        if (this.cur_loc[1] != 0){
+            System.out.println("[←] move left");
+        }
+        if (this.cur_loc[1] != 19){
+            System.out.println("[→] move right");
+        }
+        if (this.specialMove[0] != 0){
+            System.out.println("[d] Destruction");
+        }
+        if (this.specialMove[1] != 0){
+            System.out.println("[l] Long Jump");
+        }
+        if (this.specialMove[2] != 0){
+            System.out.println("[s] Spwan Trap");
+        }
+    }
     public void BackToSrc () {
 
     }
