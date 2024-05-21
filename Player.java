@@ -45,29 +45,47 @@ public class Player {
         return "\u001B[47m" + "\u001B[30m" + "PL" + this.playerId + "\u001B[0m";
     }
 
-    public void gettosides (){
+    public boolean[] gettosides (){
+        boolean[] alowed_to_move = {false,false,false,false,false,false,false};
         System.out.println("----------------"+this.toString()+"'s turn . Please make a move or use one of ypu special moves if you have some ----------------");
-        if (this.cur_loc[0] != 0){
-            System.out.println("[↑] move Up");
+        if (this.cur_loc[0] != 0 ){
+            if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+                System.out.println("[u] move Up");
+                alowed_to_move[0] = true ;
+            }
         }
         if (this.cur_loc[0] != 9){
-            System.out.println("[↓] move down");
+            if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+                System.out.println("[d] move down");
+                alowed_to_move[1] = true ;
+            }
         }
         if (this.cur_loc[1] != 0){
-            System.out.println("[←] move left");
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+                System.out.println("[l] move left");
+                alowed_to_move[2] = true ;
+            }
         }
         if (this.cur_loc[1] != 19){
-            System.out.println("[→] move right");
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+                System.out.println("[r] move right");
+                alowed_to_move[3] = true ;
+            }
         }
         if (this.specialMove[0] != 0){
-            System.out.println("[d] Destruction");
+            System.out.println("[x] Destruction");
+            alowed_to_move[4] = true ;
         }
         if (this.specialMove[1] != 0){
             System.out.println("[l] Long Jump");
+            alowed_to_move[5] = true ;
         }
         if (this.specialMove[2] != 0){
             System.out.println("[s] Spwan Trap");
+            alowed_to_move[6] = true ;
         }
+
+        return alowed_to_move ;
     }
     public void BackToSrc () {
 

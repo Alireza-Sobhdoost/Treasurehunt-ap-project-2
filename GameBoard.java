@@ -7,7 +7,8 @@ public interface GameBoard {
 
     }
     public static void print_gameboard (int[] cur_loc){
-
+        System.out.print("\033[H\033[2J");
+        System.out.println("==Treasure Hunt==");
 
         System.out.println("\n╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗");
 
