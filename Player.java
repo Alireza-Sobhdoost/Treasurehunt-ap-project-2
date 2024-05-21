@@ -49,26 +49,43 @@ public class Player {
         boolean[] alowed_to_move = {false,false,false,false,false,false,false};
         System.out.println("----------------"+this.toString()+"'s turn . Please make a move or use one of ypu special moves if you have some ----------------");
         if (this.cur_loc[0] != 0 ){
-            if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
                 System.out.println("[↑] move Up");
+                alowed_to_move[0] = true ;
+            }
+            if ((GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+                System.out.println("[↑] move Up to get treasure");
                 alowed_to_move[0] = true ;
             }
         }
         if (this.cur_loc[0] != 9){
-            if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
                 System.out.println("[↓] move down");
+                alowed_to_move[1] = true ;
+            }
+            if ((GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+                System.out.println("[↓] move down to get treasure");
                 alowed_to_move[1] = true ;
             }
         }
         if (this.cur_loc[1] != 0){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
                 System.out.println("[←] move left");
                 alowed_to_move[2] = true ;
             }
+            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+                System.out.println("[←] move left to get treasure");
+                alowed_to_move[2] = true ;
+            }
+
         }
         if (this.cur_loc[1] != 19){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m"))) {
                 System.out.println("[→] move right");
+                alowed_to_move[3] = true ;
+            }
+            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+                System.out.println("[→] move right to get treasure");
                 alowed_to_move[3] = true ;
             }
         }
@@ -86,6 +103,60 @@ public class Player {
         }
 
         return alowed_to_move ;
+    }
+    public  boolean[] Destruction (){
+        boolean[] alowed_to_destroy = {false,false,false,false} ;
+        if (this.cur_loc[0] != 0 ){
+            if (GameBoard.game_board[cur_loc[0]-1][cur_loc[1]] instanceof Wall) {
+                if (((Wall) GameBoard.game_board[cur_loc[0]-1][cur_loc[1]]).isBreakable)
+                    System.out.println("[↑] to Break your upper wall");
+                    alowed_to_destroy[0] = true ;
+            }
+            if (GameBoard.game_board[cur_loc[0]-1][cur_loc[1]] instanceof Trap) {
+                if (((Trap) GameBoard.game_board[cur_loc[0]-1][cur_loc[1]]).isDestroiable)
+                    System.out.println("[↑] to Break your upper trap");
+                    alowed_to_destroy[0] = true ;
+            }
+
+        }
+        if (this.cur_loc[0] != 9 ){
+            if (GameBoard.game_board[cur_loc[0]+1][cur_loc[1]] instanceof Wall) {
+                if (((Wall) GameBoard.game_board[cur_loc[0]+1][cur_loc[1]]).isBreakable)
+                    System.out.println("[↓] to Break your under wall");
+                    alowed_to_destroy[1] = true ;
+            }
+            if (GameBoard.game_board[cur_loc[0]+1][cur_loc[1]] instanceof Trap) {
+                if (((Trap) GameBoard.game_board[cur_loc[0]+1][cur_loc[1]]).isDestroiable)
+                    System.out.println("[↓] to Break your under trap");
+                    alowed_to_destroy[1] = true ;
+            }
+        }
+        if (this.cur_loc[1] != 0 ){
+            if (GameBoard.game_board[cur_loc[0]][cur_loc[1]-1] instanceof Wall) {
+                if (((Wall) GameBoard.game_board[cur_loc[0]][cur_loc[1]-1]).isBreakable)
+                    System.out.println("[←] to Break your left wall");
+                    alowed_to_destroy[2] = true ;
+            }
+            if (GameBoard.game_board[cur_loc[0]][cur_loc[1]-1] instanceof Trap) {
+                if (((Trap) GameBoard.game_board[cur_loc[0]][cur_loc[1]-1]).isDestroiable)
+                    System.out.println("[←] to Break your left trap");
+                    alowed_to_destroy[2] = true ;
+            }
+        }
+        if (this.cur_loc[1] != 19 ){
+            if (GameBoard.game_board[cur_loc[0]][cur_loc[1]+1] instanceof Wall) {
+                if (((Wall) GameBoard.game_board[cur_loc[0]][cur_loc[1]+1]).isBreakable)
+                    System.out.println("[→] to Break your left wall");
+                    alowed_to_destroy[3] = true ;
+            }
+            if (GameBoard.game_board[cur_loc[0]][cur_loc[1]+1] instanceof Trap) {
+                if (((Trap) GameBoard.game_board[cur_loc[0]][cur_loc[1]+1]).isDestroiable)
+                    System.out.println("[→] to Break your left trap");
+                    alowed_to_destroy[3] = true ;
+            }
+        }
+
+        return alowed_to_destroy ;
     }
     public void BackToSrc () {
 

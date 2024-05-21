@@ -12,6 +12,7 @@ public class Main implements GameBoard {
     public static int number_of_players ;
     public static List<Treasure> TRSList ;
 
+
      public static void generate_random_trap (){
          for (int i = 0 ; i < 30 ; i++) {
              Random random = new Random();
@@ -182,13 +183,14 @@ public class Main implements GameBoard {
 
   public static void main(String[] args)  {
       Scanner scanner = new Scanner(System.in);
+      List<Trap> Our_trap = new ArrayList<>();
 
 //      System.out.println(ANSI_RED + "Red text" + ANSI_RESET);
 //      System.out.println(ANSI_BLUE + "Blue text" + ANSI_RESET);
 //      System.out.println(ANSI_GREEN + "Green text" + ANSI_RESET);
       char choice ;
       List<Wall> Our_wall ;
-      List<Trap> Our_trap ;
+//      List<Trap> Our_trap ;
       Player[] players = new Player[0];
       while (true) {
           init_menu();
@@ -260,24 +262,83 @@ public class Main implements GameBoard {
                           int arrowKey = System.in.read();
 
                           if (arrowKey == 65 && allowedToMove[0]) {
+                              if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                  players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).HpLost ;
+                                  players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).ScoreLost ;
+                                  Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                              }
                               move(players[who_is_going_to_play], 'u', 1);
                               break;
                           } else if (arrowKey == 66 && allowedToMove[1]) {
+                              if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                  players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).HpLost ;
+                                  players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).ScoreLost ;
+                                  Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                              }
                               move(players[who_is_going_to_play], 'd', 1);
                               break;
                           } else if (arrowKey == 68 && allowedToMove[2]) {
+                              if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Trap) {
+                                  players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).HpLost ;
+                                  players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).ScoreLost ;
+                                  Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+
+                              }
                               move(players[who_is_going_to_play], 'l', 1);
                               break;
                           } else if (arrowKey == 67 && allowedToMove[3]) {
+                              if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Trap) {
+                                  players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).HpLost ;
+                                  players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).ScoreLost ;
+                                  Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1])) ;
+
+                              }
                               move(players[who_is_going_to_play], 'r', 1);
                               break;
                           }
                       }
 
-                      if (input == 'd') {
-                          System.out.println("Exiting program...");
+                      if (input == 'd' && allowedToMove[4]) {
+                          GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
+                          boolean[] allowedToDestroy = players[who_is_going_to_play].Destruction();
+                          try {
+                              while (true) {
+                                  int input_D = System.in.read();
+                                  if (input_D == 27) { // Escape sequence for arrow keys
+                                      System.in.read(); // Consume [
+                                      int arrowKey = System.in.read();
+
+                                      if (arrowKey == 65 && allowedToDestroy[0]) {
+                                          move(players[who_is_going_to_play], 'u', 1);
+                                          players[who_is_going_to_play].specialMove[0] -= 1 ;
+                                          break;
+                                      } else if (arrowKey == 66 && allowedToDestroy[1]) {
+                                          move(players[who_is_going_to_play], 'd', 1);
+                                          players[who_is_going_to_play].specialMove[0] -= 1 ;
+                                          break;
+                                      } else if (arrowKey == 68 && allowedToDestroy[2]) {
+                                          move(players[who_is_going_to_play], 'l', 1);
+                                          players[who_is_going_to_play].specialMove[0] -= 1 ;
+                                          break;
+                                      } else if (arrowKey == 67 && allowedToDestroy[3]) {
+                                          move(players[who_is_going_to_play], 'r', 1);
+                                          players[who_is_going_to_play].specialMove[0] -= 1 ;
+                                          break;
+                                      }
+                                  }
+                              }
+                          } catch (IOException e) {
+                              e.printStackTrace();
+                          }
+
                           break;
                       }
+                      if (input == 'l'){
+
+                      }
+                      if (input == 's'){}
                   }
               } catch (IOException e) {
                   e.printStackTrace();
