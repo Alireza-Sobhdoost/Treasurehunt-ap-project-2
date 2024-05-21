@@ -22,6 +22,7 @@ public interface GameBoard {
                 }
                 else {
                     System.out.print(" ? ");
+//                    System.out.print(game_board[rows][column]);
 
                 }
                 System.out.print("║");
