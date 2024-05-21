@@ -165,7 +165,7 @@ public class Player {
     public boolean[] LongJump () {
         System.out.println("----------------"+this.toString()+"'s turn . Please make a long jump ----------------");
 
-        boolean [] alowed_to_spwan = {false,false,false,false} ;
+        boolean [] alowed_to_move = {false,false,false,false} ;
         if (this.cur_loc[0] > 1 ){
             if (!(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
                 System.out.println("[↑] Jump Up");
@@ -216,58 +216,44 @@ public class Player {
     }
 
     public boolean[] SpwanTrap (){
-        System.out.println("----------------"+this.toString()+"'s turn . Please make a long jump ----------------");
+        System.out.println("----------------"+this.toString()+"'s turn . Please choose a location to Spwan a trap ----------------");
 
         boolean [] alowed_to_move = {false,false,false,false} ;
-        if (this.cur_loc[0] > 1 ){
-            if (!(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
-                System.out.println("[↑] Jump Up");
-                alowed_to_move[0] = true ;
-            }
-            if ((GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
-                System.out.println("[↑] Jump Up to get treasure");
+        if (this.cur_loc[0] != 0 ){
+            if ((GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("   ")) || (GameBoard.game_board[cur_loc[0]-1][cur_loc[1]] instanceof  Player)) {
+                System.out.println("[↑] Spwan a trap Up side");
                 alowed_to_move[0] = true ;
             }
         }
-        if (this.cur_loc[0] < 8){
-            if (!(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
-                System.out.println("[↓] Jump down");
-                alowed_to_move[1] = true ;
-            }
-            if ((GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
-                System.out.println("[↓] Jump down to get treasure");
+        if (this.cur_loc[0] != 9){
+            if ((GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("   ")) || (GameBoard.game_board[cur_loc[0]+1][cur_loc[1]] instanceof  Player)) {
+                System.out.println("[↓] Spwan a trap Down side");
                 alowed_to_move[1] = true ;
             }
         }
-        if (this.cur_loc[1] > 1){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
-                System.out.println("[←] Jump left");
-                alowed_to_move[2] = true ;
-            }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
-                System.out.println("[←] Jump left to get treasure");
+        if (this.cur_loc[1] != 0){
+            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("   ")) || (GameBoard.game_board[cur_loc[0]][cur_loc[1]-1] instanceof  Player)) {
+                System.out.println("[←] Spwan a trap Left side");
                 alowed_to_move[2] = true ;
             }
 
         }
-        if (this.cur_loc[1] < 18){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
-                System.out.println("[→] Jump right");
+        if (this.cur_loc[1] != 19){
+            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("   ")) || (GameBoard.game_board[cur_loc[0]][cur_loc[1]+1] instanceof  Player)) {
+                System.out.println("[→] Spwan a trap Right side");
                 alowed_to_move[3] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
-                System.out.println("[→] Jump right to get treasure");
-                alowed_to_move[3] = true ;
-            }
-
 
         }
 
         System.out.println("[b] back");
 
-        return alowed_to_spwan ;
+        return alowed_to_move ;
     }
-    public void BackToSrc () {
+    public void BackToSrc (Object[][] gameboard) {
+
+        gameboard[this.cur_loc[0]][this.cur_loc[1]] = "   " ;
+        gameboard[this.src[0]][this.src[1]] = this ;
 
     }
 
