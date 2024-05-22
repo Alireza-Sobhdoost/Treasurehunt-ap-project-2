@@ -62,7 +62,7 @@ public class Main implements GameBoard {
              players[0].src[0] = 9 ;  players[0].src[1] = 0 ;
              players[0].cur_loc[0] = 9 ;  players[0].cur_loc[1] = 0 ;
              GameBoard.game_board [0][19] = players[1] ;
-             players[1].src[1] = 0 ;  players[1].src[1] = 19 ;
+             players[1].src[0] = 0 ;  players[1].src[1] = 19 ;
              players[1].cur_loc[0] = 0 ;  players[1].cur_loc[1] = 19 ;
 
 
@@ -72,7 +72,7 @@ public class Main implements GameBoard {
              players[0].src[0] = 9 ;  players[0].src[1] = 0 ;
              players[0].cur_loc[0] = 9 ;  players[0].cur_loc[1] = 0 ;
              GameBoard.game_board [0][19] = players[1] ;
-             players[1].src[1] = 0 ;  players[1].src[1] = 19 ;
+             players[1].src[0] = 0 ;  players[1].src[1] = 19 ;
              players[1].cur_loc[0] = 0 ;  players[1].cur_loc[1] = 19 ;
              GameBoard.game_board [0][0] = players[2];
              players[2].src[0] = 0 ;  players[2].src[1] = 0 ;
@@ -192,6 +192,24 @@ public class Main implements GameBoard {
             player.cur_loc[1] += dst  ;
         }
     }
+
+    public static void andTheWinnerIs (Player player){
+         System.out.println("==Trasure Hunt==");
+         System.out.println("And the winner iiiissssss PL"+String.valueOf(player.playerId));
+         System.out.println("Congratulatiob PL"+String.valueOf(player.playerId) + "you were grate ! \uD83D\uDE0E");
+         System.out.println("Other players dont be sad ! maybe another day ! \uD83D\uDE0A");
+         player.hasWon = true ;
+
+
+    }
+    public static void someoneHaslost (Player player){
+        System.out.println("==Trasure Hunt==");
+        System.out.println("Sorry ! PL"+String.valueOf(player.playerId));
+        System.out.println("you are one of your losers ! maybe it wasn't your lucky day");
+        player.haslose = true ;
+
+
+    }
   public static final String ANSI_RESET = "\u001B[0m";
   public static final String ANSI_RED = "\u001B[31m";
   public static final String ANSI_BLUE = "\u001B[34m";
@@ -270,6 +288,11 @@ public class Main implements GameBoard {
       if (choice == 'p' || choice == 'l') {
           System.out.println(TRSList.get(0).Score_add);
           while (true) {
+
+              if (players[who_is_going_to_play].haslose){
+                  who_is_going_to_play += 1 ;
+                  who_is_going_to_play %= 4 ;
+              }
 //              GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
 //              status(players);
               boolean[] allowedToMove;
@@ -505,51 +528,55 @@ public class Main implements GameBoard {
                                           players[who_is_going_to_play].specialMove[2] -= 1 ;
                                           break;
                                       } else if (arrowKey == 66 && allowedToJump[1]) {
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[2]] instanceof Trap) {
-                                              players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).HpLost;
-                                              players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).ScoreLost;
-                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]));
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+ 1][players[who_is_going_to_play].cur_loc[1]].toString().equals("   ")) {
+                                              Trap spwaned_trap = Spwan_trap();
+                                              Our_trap = Trap.getTrapList() ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 1][players[who_is_going_to_play].cur_loc[1]] = spwaned_trap ;
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 1][players[who_is_going_to_play].cur_loc[1]] instanceof Player) {
+                                              Trap spwaned_trap = Spwan_trap();
+                                              Our_trap = Trap.getTrapList() ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).playerId - 1].HpLeft -= spwaned_trap.HpLost ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).playerId - 1].ScoreEarned -= spwaned_trap.ScoreLost ;
+                                              Our_trap.remove(spwaned_trap) ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).playerId - 1].BackToSrc(GameBoard.game_board);
 
                                           }
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]] instanceof Treasure) {
-                                              players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).Score_add;
-                                              randomLocTRS(TRSList.get(0));
-                                              ;
-
-                                          }
-                                          move(players[who_is_going_to_play], 'd', 2);
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                          players[who_is_going_to_play].specialMove[2] -= 1 ;
                                           break;
                                       } else if (arrowKey == 68 && allowedToJump[2]) {
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2] instanceof Trap) {
-                                              players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] -2]).HpLost;
-                                              players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]).ScoreLost;
-                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]));
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1].toString().equals("   ")) {
+                                          Trap spwaned_trap = Spwan_trap();
+                                          Our_trap = Trap.getTrapList() ;
+                                          GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 1] = spwaned_trap ;
+                                      }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] ][players[who_is_going_to_play].cur_loc[1]- 1] instanceof Player) {
+                                              Trap spwaned_trap = Spwan_trap();
+                                              Our_trap = Trap.getTrapList() ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).playerId - 1].HpLeft -= spwaned_trap.HpLost ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).playerId - 1].ScoreEarned -= spwaned_trap.ScoreLost ;
+                                              Our_trap.remove(spwaned_trap) ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).playerId - 1].BackToSrc(GameBoard.game_board);
 
                                           }
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2] instanceof Treasure) {
-                                              players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]).Score_add;
-                                              randomLocTRS(TRSList.get(0));
-                                              ;
-
-                                          }
-                                          move(players[who_is_going_to_play], 'l', 2);
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                          players[who_is_going_to_play].specialMove[2] -= 1 ;
                                           break;
                                       } else if (arrowKey == 67 && allowedToJump[3]) {
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2] instanceof Trap) {
-                                              players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).HpLost;
-                                              players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).ScoreLost;
-                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]));
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1].toString().equals("   ")) {
+                                              Trap spwaned_trap = Spwan_trap();
+                                              Our_trap = Trap.getTrapList() ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 1] = spwaned_trap ;
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] ][players[who_is_going_to_play].cur_loc[1]+ 1] instanceof Player) {
+                                              Trap spwaned_trap = Spwan_trap();
+                                              Our_trap = Trap.getTrapList() ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).playerId - 1].HpLeft -= spwaned_trap.HpLost ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).playerId - 1].ScoreEarned -= spwaned_trap.ScoreLost ;
+                                              Our_trap.remove(spwaned_trap) ;
+                                              players[((Player) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).playerId - 1].BackToSrc(GameBoard.game_board);
 
                                           }
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2] instanceof Treasure) {
-                                              players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).Score_add;
-                                              randomLocTRS(TRSList.get(0));
-
-                                          }
-                                          move(players[who_is_going_to_play], 'r', 2);
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                          players[who_is_going_to_play].specialMove[2] -= 1 ;
                                           break;
                                       }
                                   }
@@ -589,6 +616,14 @@ public class Main implements GameBoard {
 //                  }
 //
 //              }
+
+              if (players[who_is_going_to_play].ScoreEarned >= 100) {
+                    andTheWinnerIs(players[who_is_going_to_play]);
+                    break;
+              }
+              if (players[who_is_going_to_play].HpLeft <= 0) {
+                  someoneHaslost(players[who_is_going_to_play]);
+              }
 
               who_is_going_to_play += 1;
               who_is_going_to_play %= number_of_players;

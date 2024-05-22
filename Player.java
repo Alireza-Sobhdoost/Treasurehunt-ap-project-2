@@ -16,6 +16,10 @@ public class Player {
     int[] cur_loc ;
     int[] specialMove = {3,3,6};
 
+    boolean hasWon = false ;
+    boolean haslose = false ;
+
+
     public Player (int[] SpecialMoveCounter) {
 //        this.playername = playername ;
         this.playerId  = 1 + PlayerList.size() ;
@@ -26,6 +30,8 @@ public class Player {
         this.src = new int [2] ;
         this.cur_loc = new int [2] ;
         this.specialMove = specialMove ;
+        this.hasWon = hasWon ;
+        this.haslose = haslose ;
         PlayerList.add(this) ;
     }
 
