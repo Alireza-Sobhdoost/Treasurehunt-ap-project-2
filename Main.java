@@ -10,7 +10,7 @@ import java.io.IOException;
 public class Main implements GameBoard {
   // ANSI color codes
     public static int number_of_players ;
-    public static int who_is_going_to_play ;
+//    public static int who_is_going_to_play ;
     public static List<Treasure> TRSList ;
 
 
@@ -223,6 +223,7 @@ public class Main implements GameBoard {
       Scanner scanner = new Scanner(System.in);
       List<Trap> Our_trap = new ArrayList<>();
       List<Treasure> Our_treasure = new ArrayList<>();
+      int who_is_going_to_play = 0 ;
 
 //      System.out.println(ANSI_RED + "Red text" + ANSI_RESET);
 //      System.out.println(ANSI_BLUE + "Blue text" + ANSI_RESET);
@@ -255,6 +256,8 @@ public class Main implements GameBoard {
           else if (choice == 'p' || choice == 'l'){
               if (choice == 'p') {
                   play_init_menu();
+                  CsvFileSaveandLoad.number_of_saves  = CsvFileSaveandLoad.getNumber_of_saves() ;
+                  CsvFileSaveandLoad.getSavedFiles() ;
                   while (true) {
                       number_of_players = scanner.nextInt();
                       if ((number_of_players == 2) || (number_of_players == 4)) {
@@ -272,47 +275,64 @@ public class Main implements GameBoard {
 
                   if (number_of_players == 2) {
                       int[] src1 = {9,0};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src1 ,false,false);
+                      int [] spm1 = {3,3,6};
+                      new Player(spm1 , 5, 0 , src1 ,false,false);
                       int[] src2 = {0,19};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src2 ,false,false);
+                      int [] spm2 = {3,3,6};
+                      new Player(spm2 , 5, 0 , src2 ,false,false);
                   }
                   else if (number_of_players == 4) {
                       int[] src1 = {9,0};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src1 ,false,false);
+                      int [] spm1 = {3,3,6};
+                      new Player(spm1 , 5, 0 , src1 ,false,false);
                       int[] src2 = {0,19};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src2 ,false,false);
+                      int [] spm2 = {3,3,6};
+                      new Player(spm2 , 5, 0 , src2 ,false,false);
                       int[] src3 = {0,0};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src3 ,false,false);
+                      int [] spm3 = {3,3,6};
+                      new Player( spm3, 5, 0 , src3 ,false,false);
                       int[] src4 = {9,19};
-                      new Player(Player.SpecialMoveCounter , 5, 0 , src4 ,false,false);
+                      int [] spm4 = {3,3,6};
+                      new Player(spm4 , 5, 0 , src4 ,false,false);
 
                   }
 
                   players = Player.getPlayerList().toArray(new Player[4]);
                   initial_set(number_of_players, players, Our_wall, Our_trap);
                   randomLocTRS(TRS);
+                  who_is_going_to_play = 0 ;
+                  CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
+                  CsvFileSaveandLoad.SaveStatus();
 //                  int[] a = {4, 10};
                   break;
               }
               if (choice == 'l'){
                   while (true) {
-                      int numberOfSaves = CsvFileSaveandLoad.LoadStatus();
+                      CsvFileSaveandLoad.number_of_saves = CsvFileSaveandLoad.LoadStatus();
+                      CsvFileSaveandLoad.getSavedFiles() ;
+                      CsvFileSaveandLoad.SaveStatus();
 //                      System.out.println(numberOfSaves);
                       int fileToLoad = scanner.nextInt();
-                      if (fileToLoad  <= numberOfSaves) {
+                      if (fileToLoad  <= CsvFileSaveandLoad.number_of_saves ) {
 
                           CsvFileSaveandLoad.LoadGame("game"+String.valueOf(fileToLoad)+".csv" , GameBoard.game_board );
+                          who_is_going_to_play = CsvFileSaveandLoad.getTurn() ;
+//                          number_of_players = CsvFileSaveandLoad.numberplayers ;
+//                          who_is_going_to_play = CsvFileSaveandLoad.turn ;
                           int[] a = {0,0} ;
                           Our_wall = Wall.getWallList();
                           Our_trap = Trap.getTrapList();
                           TRSList = Treasure.getTreasureList();
                           players = Player.getPlayerList().toArray(new Player[4]);
-                          GameBoard.print_gameboard(a);
+//                          GameBoard.print_gameboard(a);
 //                          System.out.println(players[0].HpLeft);
                           break;
 
                       }
                   }
+                  CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
+                  CsvFileSaveandLoad.SaveStatus();
+
 
                   break;
 
@@ -320,11 +340,11 @@ public class Main implements GameBoard {
           }
 
       }
-      who_is_going_to_play = 0 ;
+
       if (choice == 'p' || choice == 'l') {
-          System.out.println(number_of_players);
-          System.out.println(who_is_going_to_play);
-          System.out.println(players[who_is_going_to_play].specialMove[0]);
+//          System.out.println(number_of_players);
+//          System.out.println(who_is_going_to_play);
+//          System.out.println(players[who_is_going_to_play].specialMove[0]);
 
 
           while (true) {
@@ -341,9 +361,9 @@ public class Main implements GameBoard {
 
 
                   while (true) {
-                      CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
                       GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
                       status(players);
+//                      System.out.println(who_is_going_to_play);
                       allowedToMove = players[who_is_going_to_play].gettosides();
                       int input = System.in.read();
 
@@ -481,7 +501,7 @@ public class Main implements GameBoard {
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 66 && allowedToJump[1]) {
-                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[2]] instanceof Trap) {
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
                                               players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).HpLost;
                                               players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).ScoreLost;
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]));
@@ -668,6 +688,7 @@ public class Main implements GameBoard {
               }
               who_is_going_to_play += 1;
               who_is_going_to_play %= number_of_players;
+              CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
 
           }
       }
