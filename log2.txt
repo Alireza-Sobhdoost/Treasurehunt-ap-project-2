@@ -1,4 +1,2 @@
-PL2 in A20 has moved to A19
-PL1 in I1 has moved to I2 and damaged by a TNT
-PL1 in I1 has moved to I2
-PL2 in A19 has moved to A18
+PL2 in A20 has jumped to A18
+PL1 in J1 has moved to I1 and damaged by a Bomb

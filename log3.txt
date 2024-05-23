@@ -1,0 +1,2 @@
+PL2 in A20 has jumped to A18
+PL1 in J1 has moved to J2 and get the Treasure 
