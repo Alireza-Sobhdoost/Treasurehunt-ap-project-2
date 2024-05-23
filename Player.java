@@ -20,14 +20,14 @@ public class Player {
     boolean haslose = false ;
 
 
-    public Player (int[] SpecialMoveCounter) {
+    public Player (int[] specialMove , int HpLeft , int ScoreEarned , int[] src , boolean hasWon , boolean haslose) {
 //        this.playername = playername ;
         this.playerId  = 1 + PlayerList.size() ;
-        this.HpLeft = 5 ;
-        this.ScoreEarned = 0 ;
-        this.SpecialMoveCounter = SpecialMoveCounter;
-        this.SpecialMoveLeft = Sum_list(this.SpecialMoveCounter) ;
-        this.src = new int [2] ;
+        this.HpLeft = HpLeft ;
+        this.ScoreEarned = ScoreEarned ;
+//        this.SpecialMoveCounter = SpecialMoveCounter;
+//        this.SpecialMoveLeft = Sum_list(this.SpecialMoveCounter) ;
+        this.src = src ;
         this.cur_loc = new int [2] ;
         this.specialMove = specialMove ;
         this.hasWon = hasWon ;

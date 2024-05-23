@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Main implements GameBoard {
   // ANSI color codes
     public static int number_of_players ;
+    public static int who_is_going_to_play ;
     public static List<Treasure> TRSList ;
 
 
@@ -269,9 +270,24 @@ public class Main implements GameBoard {
                   Treasure TRS = new Treasure();
                   TRSList = Treasure.getTreasureList();
 
-                  for (int i = 0; i < number_of_players; i++) {
-                      new Player(Player.SpecialMoveCounter);
+                  if (number_of_players == 2) {
+                      int[] src1 = {9,0};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src1 ,false,false);
+                      int[] src2 = {0,19};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src2 ,false,false);
                   }
+                  else if (number_of_players == 4) {
+                      int[] src1 = {9,0};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src1 ,false,false);
+                      int[] src2 = {0,19};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src2 ,false,false);
+                      int[] src3 = {0,0};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src3 ,false,false);
+                      int[] src4 = {9,19};
+                      new Player(Player.SpecialMoveCounter , 5, 0 , src4 ,false,false);
+
+                  }
+
                   players = Player.getPlayerList().toArray(new Player[4]);
                   initial_set(number_of_players, players, Our_wall, Our_trap);
                   randomLocTRS(TRS);
@@ -279,14 +295,38 @@ public class Main implements GameBoard {
                   break;
               }
               if (choice == 'l'){
+                  while (true) {
+                      int numberOfSaves = CsvFileSaveandLoad.LoadStatus();
+//                      System.out.println(numberOfSaves);
+                      int fileToLoad = scanner.nextInt();
+                      if (fileToLoad  <= numberOfSaves) {
+
+                          CsvFileSaveandLoad.LoadGame("game"+String.valueOf(fileToLoad)+".csv" , GameBoard.game_board );
+                          int[] a = {0,0} ;
+                          Our_wall = Wall.getWallList();
+                          Our_trap = Trap.getTrapList();
+                          TRSList = Treasure.getTreasureList();
+                          players = Player.getPlayerList().toArray(new Player[4]);
+                          GameBoard.print_gameboard(a);
+//                          System.out.println(players[0].HpLeft);
+                          break;
+
+                      }
+                  }
+
                   break;
+
               }
           }
 
       }
-      int who_is_going_to_play = 0 ;
+      who_is_going_to_play = 0 ;
       if (choice == 'p' || choice == 'l') {
-          System.out.println(TRSList.get(0).Score_add);
+          System.out.println(number_of_players);
+          System.out.println(who_is_going_to_play);
+          System.out.println(players[who_is_going_to_play].specialMove[0]);
+
+
           while (true) {
 
               if (players[who_is_going_to_play].haslose){
@@ -299,7 +339,9 @@ public class Main implements GameBoard {
               BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
               try {
 
+
                   while (true) {
+                      CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
                       GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
                       status(players);
                       allowedToMove = players[who_is_going_to_play].gettosides();
@@ -624,9 +666,9 @@ public class Main implements GameBoard {
               if (players[who_is_going_to_play].HpLeft <= 0) {
                   someoneHaslost(players[who_is_going_to_play]);
               }
-
               who_is_going_to_play += 1;
               who_is_going_to_play %= number_of_players;
+
           }
       }
 

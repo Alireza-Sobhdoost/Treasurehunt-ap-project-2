@@ -7,20 +7,15 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 
 
-public class TextFileSaveAndLoad {
-
-    private static boolean pl1Found = false;
-    private static boolean pl2Found = false;
-    private static boolean pl3Found = false;
-    private static boolean pl4Found = false;
+public class CsvFileSaveandLoad {
 
     public static List<String> saved_files = new ArrayList<>();
-    private static int number_of_saves = 1;
+    public static int number_of_saves ;
 
     public static void SaveGame(Object[][] data , int number_of_players , int who_is_going_to_play , Player[] players) {
-        String txtFilePath = "game" + String.valueOf(number_of_saves) + ".txt";
+        String csvFilePath = "game" + String.valueOf(number_of_saves) + ".csv";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(txtFilePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
             for (Object[] row : data) {
                 if (row != null) {
                     for (int i = 0; i < row.length; i++) {
@@ -42,46 +37,112 @@ public class TextFileSaveAndLoad {
             writer.write(String.valueOf(who_is_going_to_play));
             writer.write("\n");
 
-            for (Player player : players){
-                writer.write(
-                        String.valueOf(player.specialMove[0]) + "," +
-                                String.valueOf(player.specialMove[1]) + "," +
-                                String.valueOf(player.specialMove[2]) + "," +
-                                String.valueOf(player.HpLeft) + "," +
-                                String.valueOf(player.ScoreEarned) + "," +
-                                String.valueOf(player.src[0]) + "," +
-                                String.valueOf(player.src[1]) + "," +
-                                String.valueOf(player.hasWon) + "," +
-                                String.valueOf(player.haslose)
-                );
-                writer.write("\n");
+            // Update the loop to handle potential null Player objects
+            for (Player player : players) {
+                if (player != null) {
+                    writer.write(
+                            String.valueOf(player.specialMove[0]) + "," +
+                                    String.valueOf(player.specialMove[1]) + "," +
+                                    String.valueOf(player.specialMove[2]) + "," +
+                                    String.valueOf(player.HpLeft) + "," +
+                                    String.valueOf(player.ScoreEarned) + "," +
+                                    String.valueOf(player.src[0]) + "," +
+                                    String.valueOf(player.src[1]) + "," +
+                                    String.valueOf(player.hasWon) + "," +
+                                    String.valueOf(player.haslose)
+                    );
+                    writer.write("\n");
+                }
             }
-            System.out.println("Data saved to " + txtFilePath);
+            System.out.println("Data saved to " + csvFilePath);
+            saved_files.add(csvFilePath) ;
+            SaveStatus() ;
         } catch (IOException e) {
-            System.out.println("Error writing to text file: " + e.getMessage());
+            System.out.println("Error writing to CSV file: " + e.getMessage());
         }
     }
 
-    public static Object[][] LoadGame(String txtFilePath) {
-        Object[][] data = new Object[10][20];
+    public static void SaveStatus () {
+        String csvFilePath = "gamestatus.csv";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(txtFilePath))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
+            for (String item : saved_files) {
+                if (item != null) {
+                    writer.write(item);
+                    writer.write(",");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to CSV file: " + e.getMessage());
+        }
+    }
+
+    public static int LoadStatus() {
+        String csvFilePath = "gamestatus.csv";
+        String[] values = new String[0];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
+            System.out.print("\033[H\033[2J");
+            String line = reader.readLine();
+            values = line.split(",");
+            number_of_saves = values.length ;
+            System.out.println("==Trasure==");
+            System.out.println("which game ddo you waant to load ?");
+            for (int i = 0 ; i < values.length ; i ++) {
+                System.out.println("["+String.valueOf(i+1)+"] " + values[i]);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading CSV file: " + e.getMessage());
+        }
+
+        return number_of_saves ;
+    }
+    public static void LoadGame(String csvFilePath , Object[][] data) {
+//        Object[][] data = new Object[10][20];
+        Object[] lastThreeLines = new Object[9];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             int rowIdx = 0;
-            while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null && rowIdx < 11) {
                 String[] values = line.split(",");
-                for (int colIdx = 0; colIdx < values.length; colIdx++) {
-                    data[rowIdx][colIdx] = parseValue(values[colIdx]);
+                if (rowIdx < 10){
+                    for (int colIdx = 0; colIdx < values.length; colIdx++) {
+                        data[rowIdx][colIdx] = parseValue(values[colIdx]);
+                    }
+                }
+                if (rowIdx == 10) {
+                    Main.number_of_players = Integer.parseInt(values[0]); // Assuming the value in line 11 is an integer
+                }
+                if (rowIdx == 11) {
+                    Main.who_is_going_to_play = Integer.parseInt(values[0]); // Assuming the value in line 12 is an integer
                 }
                 rowIdx++;
             }
+
+            // Read the last 3 lines
+            int lastThreeLinesIdx = 0;
+            int found = 0 ;
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+//                System.out.println(values.length);
+                int[] coord = findElement(data,found+1) ;
+                int [] specialMove = {Integer.parseInt(values[0]) , Integer.parseInt(values[1]), Integer.parseInt(values[2])} ;
+                int [] src = {Integer.parseInt(values[5]) , Integer.parseInt(values[6])} ;
+                boolean won = Boolean.valueOf(values[7]) ;
+                boolean lose = Boolean.valueOf(values[8]) ;
+                Player player = new Player(specialMove , Integer.parseInt(values[3]) , Integer.parseInt(values[4]) , src , won , lose) ;
+                data[coord[0]][coord[1]] = player ;
+                player.cur_loc = coord ;
+                found += 1 ;
+            }
         } catch (IOException e) {
-            System.out.println("Error reading text file: " + e.getMessage());
+            System.out.println("Error reading CSV file: " + e.getMessage());
         }
 
         number_of_saves += 1;
 
-        return data;
+//        return data;
     }
 
     public static List<String> coordofplayerss = new ArrayList<>() ;

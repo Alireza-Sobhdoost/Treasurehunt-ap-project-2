@@ -1,7 +1,7 @@
 import static java.lang.Math.abs;
 
 public interface GameBoard {
-    Object[][] game_board = new Object[10][20] ;
+     Object[][] game_board = new Object[10][20] ;
 
     public static void print_gameboard (int[] cur_loc){
         System.out.print("\033[H\033[2J");
