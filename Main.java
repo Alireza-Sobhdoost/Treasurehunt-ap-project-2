@@ -221,6 +221,7 @@ public class Main implements GameBoard {
 
   public static void main(String[] args)  {
       Scanner scanner = new Scanner(System.in);
+      List<Wall> Our_wall = new ArrayList<>() ;
       List<Trap> Our_trap = new ArrayList<>();
       List<Treasure> Our_treasure = new ArrayList<>();
       int who_is_going_to_play = 0 ;
@@ -229,7 +230,7 @@ public class Main implements GameBoard {
 //      System.out.println(ANSI_BLUE + "Blue text" + ANSI_RESET);
 //      System.out.println(ANSI_GREEN + "Green text" + ANSI_RESET);
       char choice ;
-      List<Wall> Our_wall ;
+//      List<Wall> Our_wall ;
 //      List<Trap> Our_trap ;
       Player[] players = new Player[0];
       while (true) {
@@ -341,6 +342,8 @@ public class Main implements GameBoard {
 
       }
 
+      String message = "" ;
+
       if (choice == 'p' || choice == 'l') {
 //          System.out.println(number_of_players);
 //          System.out.println(who_is_going_to_play);
@@ -363,6 +366,7 @@ public class Main implements GameBoard {
                   while (true) {
                       GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
                       status(players);
+                      System.out.println(message);
 //                      System.out.println(who_is_going_to_play);
                       allowedToMove = players[who_is_going_to_play].gettosides();
                       int input = System.in.read();
@@ -373,57 +377,90 @@ public class Main implements GameBoard {
 
                           if (arrowKey == 65 && allowedToMove[0]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).HpLost ;
                                   players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).ScoreLost ;
                                   Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
 
                               }
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Treasure) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).Score_add ;
                                   randomLocTRS(TRSList.get(0)); ;
 
+                              }
+
+                              else {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
+                                  Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'u', 1);
                               break;
                           } else if (arrowKey == 66 && allowedToMove[1]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).HpLost ;
                                   players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).ScoreLost ;
                                   Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]])) ;
 
                               }
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Treasure) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).Score_add ;
                                   randomLocTRS(TRSList.get(0)); ;
 
+                              }
+                              else {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
+                                  Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'd', 1);
                               break;
                           } else if (arrowKey == 68 && allowedToMove[2]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Trap) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).trap ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).HpLost ;
                                   players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).ScoreLost ;
                                   Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
 
                               }
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Treasure) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) +" and get the Treasure " ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).Score_add ;
                                   randomLocTRS(TRSList.get(0)); ;
 
+                              }
+                              else {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) ;
+                                  Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'l', 1);
                               break;
                           } else if (arrowKey == 67 && allowedToMove[3]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Trap) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).trap ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).HpLost ;
                                   players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).ScoreLost ;
                                   Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1])) ;
 
                               }
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Treasure) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) +" and get the Treasure " ;
+                                  Log.writeMessage(message);
                                   players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).Score_add ;
                                   randomLocTRS(TRSList.get(0)); ;
 
+                              }
+                              else {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) ;
+                                  Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'r', 1);
                               break;
@@ -443,19 +480,67 @@ public class Main implements GameBoard {
                                       int arrowKey = System.in.read();
 
                                       if (arrowKey == 65 && allowedToDestroy[0]) {
-                                          move(players[who_is_going_to_play], 'u', 1);
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
+                                              Log.writeMessage(message);
+                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Wall) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
+                                              Log.writeMessage(message);
+                                              Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                                          }
+//                                          move(players[who_is_going_to_play], 'u', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
                                           break;
                                       } else if (arrowKey == 66 && allowedToDestroy[1]) {
-                                          move(players[who_is_going_to_play], 'd', 1);
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
+                                              Log.writeMessage(message);
+                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Wall) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
+                                              Log.writeMessage(message);
+                                              Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]])) ;
+
+                                          }
+//                                          move(players[who_is_going_to_play], 'd', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
                                           break;
                                       } else if (arrowKey == 68 && allowedToDestroy[2]) {
-                                          move(players[who_is_going_to_play], 'l', 1);
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1])  ;
+                                              Log.writeMessage(message);
+                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Wall) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1])  ;
+                                              Log.writeMessage(message);
+                                              Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]-1])) ;
+
+                                          }
+//                                          move(players[who_is_going_to_play], 'l', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
                                           break;
                                       } else if (arrowKey == 67 && allowedToDestroy[3]) {
-                                          move(players[who_is_going_to_play], 'r', 1);
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2)  ;
+                                              Log.writeMessage(message);
+                                              Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+
+                                          }
+                                          if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Wall) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2)  ;
+                                              Log.writeMessage(message);
+                                              Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]-1])) ;
+
+                                          }
+//                                          move(players[who_is_going_to_play], 'r', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
                                           break;
                                       }
@@ -486,63 +571,91 @@ public class Main implements GameBoard {
 
                                       if (arrowKey == 65 && allowedToJump[0]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-2][players[who_is_going_to_play].cur_loc[1]]).trap ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]]).HpLost;
                                               players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]]).ScoreLost;
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]]));
 
                                           }
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]] instanceof Treasure) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] - 2][players[who_is_going_to_play].cur_loc[1]]).Score_add;
                                               randomLocTRS(TRSList.get(0));
-                                              ;
 
+                                          }
+                                          else {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
+                                              Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'u', 2);
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 66 && allowedToJump[1]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]]).trap ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).HpLost;
                                               players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).ScoreLost;
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]));
 
                                           }
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]] instanceof Treasure) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).Score_add;
                                               randomLocTRS(TRSList.get(0));
-                                              ;
-
+                                          }
+                                          else {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
+                                              Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'd', 2);
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 68 && allowedToJump[2]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2]).trap ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] -2]).HpLost;
                                               players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]).ScoreLost;
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]));
 
                                           }
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2] instanceof Treasure) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) +" and get the Treasure " ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2]).Score_add;
                                               randomLocTRS(TRSList.get(0));
-                                              ;
 
+                                          }
+                                          else {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) ;
+                                              Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'l', 2);
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 67 && allowedToJump[3]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2] instanceof Trap) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2]).trap ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).HpLost;
                                               players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).ScoreLost;
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]));
 
                                           }
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2] instanceof Treasure) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) +" and get the Treasure " ;
+                                              Log.writeMessage(message);
                                               players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2]).Score_add;
                                               randomLocTRS(TRSList.get(0));
 
+                                          }
+                                          else {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) ;
+                                              Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'r', 2);
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;

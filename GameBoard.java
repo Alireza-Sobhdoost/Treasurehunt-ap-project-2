@@ -3,14 +3,16 @@ import static java.lang.Math.abs;
 public interface GameBoard {
      Object[][] game_board = new Object[10][20] ;
 
+    public static Character[] row_log = {'A','B', 'C', 'D', 'E', 'F','G','H','I','J'};
+     public static  int[] column_log = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
     public static void print_gameboard (int[] cur_loc){
         System.out.print("\033[H\033[2J");
         System.out.println("==Treasure Hunt==");
-
-        System.out.println("\n╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗");
+        System.out.println("\n      1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19  20 ");
+        System.out.println("\n    ╔═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗");
 
         for (int rows = 0 ; rows < 10 ; rows++) {
-            System.out.print("║");
+            System.out.print(row_log[rows].toString() + "   ║");
             for (int column = 0; column < 20; column++) {
 //                my version
 //                if (((((rows - cur_loc[0])*(rows - cur_loc[0])) + ((column - cur_loc[1])*(column - cur_loc[1]))) <= 16) || game_board[rows][column].equals("\u001B[47m" + "\u001B[30m" + "PL1" + "\u001B[0m") || game_board[rows][column].equals("\u001B[47m" + "\u001B[30m" + "PL2" + "\u001B[0m") || game_board[rows][column].equals("\u001B[47m" + "\u001B[30m" + "PL3" + "\u001B[0m") || game_board[rows][column].equals("\u001B[47m" + "\u001B[30m" + "PL4" + "\u001B[0m")){
@@ -29,10 +31,10 @@ public interface GameBoard {
             }
 
             if (rows < 9) {
-                System.out.println("\n╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣");
+                System.out.println("\n    ╠═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╬═══╣");
             }
             else {
-                System.out.println("\n╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
+                System.out.println("\n    ╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝");
             }
 
         }
