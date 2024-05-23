@@ -119,7 +119,8 @@ public class CsvFileSaveandLoad {
                 number_of_saves = 0 ;
             }
         } catch (IOException e) {
-            System.out.println("Error reading CSV file: " + e.getMessage());
+//            System.out.println("Error reading CSV file: " + e.getMessage());
+            number_of_saves = 1;
         }
         return number_of_saves ;
     }
@@ -138,7 +139,7 @@ public class CsvFileSaveandLoad {
             }
 
         } catch (IOException e) {
-            System.out.println("Error reading CSV file: " + e.getMessage());
+//            System.out.println("Error reading CSV file: " + e.getMessage());
         }
 
     }

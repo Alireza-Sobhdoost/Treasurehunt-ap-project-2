@@ -258,7 +258,9 @@ public class Main implements GameBoard {
               if (choice == 'p') {
                   play_init_menu();
                   CsvFileSaveandLoad.number_of_saves  = CsvFileSaveandLoad.getNumber_of_saves() ;
-                  CsvFileSaveandLoad.getSavedFiles() ;
+                  if (CsvFileSaveandLoad.number_of_saves != 0) {
+                      CsvFileSaveandLoad.getSavedFiles();
+                  }
                   while (true) {
                       number_of_players = scanner.nextInt();
                       if ((number_of_players == 2) || (number_of_players == 4)) {
@@ -369,6 +371,7 @@ public class Main implements GameBoard {
                       System.out.println(message);
 //                      System.out.println(who_is_going_to_play);
                       allowedToMove = players[who_is_going_to_play].gettosides();
+                      System.out.println("[h] see log's history of your movments");
                       int input = System.in.read();
 
                       if (input == 27) { // Escape sequence for arrow keys
@@ -765,6 +768,17 @@ public class Main implements GameBoard {
                           if (!back_opt) {
                               break;
                           }
+                      }
+                      if (input == 'h') {
+                          Log.readLinesFromFile("log"+String.valueOf(CsvFileSaveandLoad.number_of_saves)+".txt",players[who_is_going_to_play]);
+                          System.out.println("[b] back");
+                          while (true){
+                              char choise_in_history = scanner.next().charAt(0);
+                              if (choise_in_history == 'b'){
+                                  break;
+                              }
+                          }
+//                          break;
                       }
                   }
               } catch (IOException e) {
