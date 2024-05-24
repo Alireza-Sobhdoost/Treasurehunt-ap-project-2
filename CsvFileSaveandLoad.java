@@ -155,7 +155,7 @@ public class CsvFileSaveandLoad {
                 String[] values = line.split(",");
                 if (rowIdx < 10){
                     for (int colIdx = 0; colIdx < values.length; colIdx++) {
-                        data[rowIdx][colIdx] = parseValue(values[colIdx]);
+                        data[rowIdx][colIdx] = parseValue(values[colIdx],rowIdx,colIdx);
                     }
                 }
 //                if (rowIdx == 10) {
@@ -203,7 +203,7 @@ public class CsvFileSaveandLoad {
         return turn ;
     }
     public static List<String> coordofplayerss = new ArrayList<>() ;
-    private static Object parseValue(String item) {
+    private static Object parseValue(String item , int row , int column) {
         if (item.equals("\u001B[47m" + "\u001B[30m" + "PL1" + "\u001B[0m")) {
            coordofplayerss.add(" 1 ") ;
             return 1;
@@ -227,6 +227,11 @@ public class CsvFileSaveandLoad {
         if (item.equals("\u001B[34m" + "SPN" + "\u001B[0m")) {
             Spin spin = new Spin();
             return spin;
+        }
+        if (item.equals("\u001B[35m" + "PRT" + "\u001B[0m")) {
+            int[] l = {row,column} ;
+            Portal portal = new Portal(l,false);
+            return portal;
         }
         if (item.equals("\u001B[31m" + "MST" + "\u001B[0m")) {
             Trap trap = new Trap(TrapType.MouseTrap, true, 1, 5);

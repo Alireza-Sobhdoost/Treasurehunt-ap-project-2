@@ -125,7 +125,7 @@ public class Main implements GameBoard {
     }
 
 
-     public static void initial_set (int numberOfPlayers , Player[] players ,List<Wall> Our_wall , List<Trap> Our_trap){
+     public static void initial_set (int numberOfPlayers , Player[] players ,List<Wall> Our_wall , List<Trap> Our_trap , Portal[] portals){
          for (int rows = 0 ; rows < 10 ; rows++) {
              for (int column = 0; column < 20; column++) {
                  game_board[rows][column] = "   ";
@@ -157,6 +157,10 @@ public class Main implements GameBoard {
              players[3].cur_loc[0] = 9 ;  players[3].cur_loc[1] = 19 ;
 
          }
+//         System.out.println(portals[0].loc[0] + portals[0].loc[1] );
+         GameBoard.game_board[portals[0].loc[0]][portals[0].loc[1]] = portals[0] ;
+         GameBoard.game_board[portals[1].loc[0]][portals[1].loc[1]] = portals[1] ;
+
          for (Wall wall : Our_wall) {
              Random random = new Random();
              while (true) {
@@ -278,6 +282,143 @@ public class Main implements GameBoard {
             player.cur_loc[1] += dst  ;
         }
     }
+    public static void moveWithPortal (Player[] players , int who_is_going_to_play, char move , int[] src, List<Trap> Our_trap , List<Spin> spinList){
+         String message = null ;
+         boolean flagspeqto2 = false ;
+        if (move == 'u') {
+            if (GameBoard.game_board[src[0] -1][src[1]] instanceof Trap) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[src[0]-1][src[1]]).HpLost ;
+                players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[src[0]-1][src[1]]).ScoreLost ;
+                Our_trap.remove(((Trap) GameBoard.game_board[src[0]-1][src[1]])) ;
+
+            }
+            else if (GameBoard.game_board[src[0]-1][src[1]] instanceof Treasure) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[src[0]-1][src[1]]).Score_add ;
+                randomLocTRS(TRSList.get(0)); ;
+
+            }
+            else if (GameBoard.game_board[src[0]-1][src[1]] instanceof Spin) {
+
+                String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                if (randomIndexsp == 2){
+                    flagspeqto2 = true;
+                }
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+//                Log.writeMessage(message);
+                randomLocSPN(spinList.get(0));
+            }
+
+            GameBoard.game_board[src[0] - 1][src[1]] = players[who_is_going_to_play];
+            GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
+            players[who_is_going_to_play].cur_loc[0] -= 1 ;
+            if (flagspeqto2){
+                players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+            }
+        }
+        if (move == 'd') {
+            if (GameBoard.game_board[src[0] +1][src[1]] instanceof Trap) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[src[0]+1][src[1]]).HpLost ;
+                players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[src[0]+1][src[1]]).ScoreLost ;
+                Our_trap.remove(((Trap) GameBoard.game_board[src[0]-1][src[1]])) ;
+
+            }
+            else if (GameBoard.game_board[src[0]+1][src[1]] instanceof Treasure) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[src[0]+1][src[1]]).Score_add ;
+                randomLocTRS(TRSList.get(0)); ;
+
+            }
+            else if (GameBoard.game_board[src[0]+1][src[1]] instanceof Spin) {
+
+                String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                if (randomIndexsp == 2){
+                    flagspeqto2 = true;
+                }
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+//                Log.writeMessage(message);
+                randomLocSPN(spinList.get(0));
+            }
+            GameBoard.game_board[src[0] + 1][src[1]] = players[who_is_going_to_play];
+            GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
+            players[who_is_going_to_play].cur_loc[0] += 1 ;
+            if (flagspeqto2){
+                players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+            }
+        }
+        if (move == 'l') {
+            if (GameBoard.game_board[src[0] ][src[1]-1] instanceof Trap) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[src[0]][src[1]-1]).HpLost ;
+                players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[src[0]][src[1]-1]).ScoreLost ;
+                Our_trap.remove(((Trap) GameBoard.game_board[src[0]][src[1]-1])) ;
+
+            }
+            else if (GameBoard.game_board[src[0]][src[1]-1] instanceof Treasure) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[src[0]][src[1]-1]).Score_add ;
+                randomLocTRS(TRSList.get(0)); ;
+
+            }
+            else if (GameBoard.game_board[src[0]][src[1]-1] instanceof Spin) {
+
+                String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                if (randomIndexsp == 2){
+                    flagspeqto2 = true;
+                }
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+//                Log.writeMessage(message);
+                randomLocSPN(spinList.get(0));
+            }
+            GameBoard.game_board[src[0]][src[1] - 1] = players[who_is_going_to_play];
+            GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
+            players[who_is_going_to_play].cur_loc[1] -= 1  ;
+            if (flagspeqto2){
+                players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+            }
+        }
+        if (move == 'r') {
+            if (GameBoard.game_board[src[0] ][src[1]+1] instanceof Trap) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].HpLeft -= ((Trap) GameBoard.game_board[src[0]][src[1]+1]).HpLost ;
+                players[who_is_going_to_play].ScoreEarned -= ((Trap) GameBoard.game_board[src[0]][src[1]+1]).ScoreLost ;
+                Our_trap.remove(((Trap) GameBoard.game_board[src[0]][src[1]-1])) ;
+
+            }
+            else if (GameBoard.game_board[src[0]][src[1]+1] instanceof Treasure) {
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get the Treasure " ;
+//                Log.writeMessage(message);
+                players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[src[0]][src[1]+1]).Score_add ;
+                randomLocTRS(TRSList.get(0)); ;
+
+            }
+            else if (GameBoard.game_board[src[0]][src[1]+1] instanceof Spin) {
+
+                String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                if (randomIndexsp == 2){
+                    flagspeqto2 = true;
+                }
+//                message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+//                Log.writeMessage(message);
+                randomLocSPN(spinList.get(0));
+            }
+            GameBoard.game_board[src[0]][src[1] + 1] = players[who_is_going_to_play];
+            GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
+            players[who_is_going_to_play].cur_loc[1] += 1  ;
+            if (flagspeqto2){
+                players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+            }
+        }
+    }
 
     public static void andTheWinnerIs (Player player){
          System.out.println("==Trasure Hunt==");
@@ -310,6 +451,7 @@ public class Main implements GameBoard {
       List<Trap> Our_trap = new ArrayList<>();
       List<Treasure> Our_treasure = new ArrayList<>();
       List<Spin> spinList = new ArrayList<>() ;
+      Portal[] portals = new Portal[2] ;
       int who_is_going_to_play = 0 ;
 
 //      System.out.println(ANSI_RED + "Red text" + ANSI_RESET);
@@ -355,6 +497,11 @@ public class Main implements GameBoard {
                           System.out.println("the number of players should be 2 or 4 players");
                   }
 
+                  int[] portal1 = {1,1} ;
+                  int[] portal2 = {8,18} ;
+                  Portal Prt1 = new Portal(portal1 , false) ;
+                  Portal Prt2 = new Portal(portal2, false) ;
+                  portals = Portal.getPortals();
                   generate_random_wall();
                   generate_random_trap();
                   Our_wall = Wall.getWallList();
@@ -389,7 +536,7 @@ public class Main implements GameBoard {
                   }
 
                   players = Player.getPlayerList().toArray(new Player[4]);
-                  initial_set(number_of_players, players, Our_wall, Our_trap);
+                  initial_set(number_of_players, players, Our_wall, Our_trap , portals);
                   randomLocTRS(TRS);
                   randomLocSPN(spin);
                   who_is_going_to_play = 0 ;
@@ -416,6 +563,7 @@ public class Main implements GameBoard {
                           Our_trap = Trap.getTrapList();
                           TRSList = Treasure.getTreasureList();
                           spinList = Spin.getSpinList();
+                          portals = Portal.getPortals();
                           players = Player.getPlayerList().toArray(new Player[4]);
 //                          GameBoard.print_gameboard(a);
 //                          System.out.println(players[0].HpLeft);
@@ -457,6 +605,8 @@ public class Main implements GameBoard {
 
                   while (true) {
                       boolean flagspeqto2 = false ;
+                      boolean isportalused = false ;
+                      boolean[] portalallowd = new boolean[4];
                       GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
                       status(players);
                       System.out.println(message);
@@ -464,7 +614,7 @@ public class Main implements GameBoard {
                       allowedToMove = players[who_is_going_to_play].gettosides();
                       System.out.println("[h] see log's history of your movments");
                       int input = System.in.read();
-
+                      int allowtouseportal = 0 ;
                       if (input == 27) { // Escape sequence for arrow keys
                           System.in.read(); // Consume [
                           int arrowKey = System.in.read();
@@ -496,16 +646,49 @@ public class Main implements GameBoard {
                                   randomLocSPN(spinList.get(0));
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Portal) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get into a Portal " ;
+                                  Log.writeMessage(message);
+                                  portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).checksides() ;
+                                  for (boolean i : portalallowd){
+                                      if (i) {
+                                          allowtouseportal += 1 ;
+                                      }
+                                  }
+                                  isportalused = true ;
+
+                              }
 
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                   Log.writeMessage(message);
                               }
-                              move(players[who_is_going_to_play], 'u', 1);
-                              if (flagspeqto2){
-                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              if (!isportalused) {
+                                  move(players[who_is_going_to_play], 'u', 1);
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
                               }
-                              break;
+                              if (allowtouseportal != 0){
+                                  char[] moveopt = {'u','d','l','r'} ;
+                                  Random random = new Random();
+                                  int randomportal = 0 ;
+                                  while (true) {
+                                      randomportal= random.nextInt(4);
+                                      if (portalallowd[randomportal]){
+                                          break;
+                                      }
+                                  }
+                                  moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).id + 1)%2].loc , Our_trap, spinList) ;
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
+                              }
+//                              else {continue;}
+
+
                           } else if (arrowKey == 66 && allowedToMove[1]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).trap ;
@@ -532,16 +715,48 @@ public class Main implements GameBoard {
                                   randomLocSPN(spinList.get(0));
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Portal) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get into a Portal " ;
+                                  Log.writeMessage(message);
+                                  portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).checksides() ;
+                                  for (boolean i : portalallowd){
+                                      if (i) {
+                                          allowtouseportal += 1 ;
+                                      }
+                                  }
+                                  isportalused = true ;
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                   Log.writeMessage(message);
                               }
 
-                              move(players[who_is_going_to_play], 'd', 1);
-                              if (flagspeqto2){
-                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              if (!isportalused) {
+                                  move(players[who_is_going_to_play], 'd', 1);
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
                               }
-                              break;
+                              if (allowtouseportal != 0){
+                                  char[] moveopt = {'u','d','l','r'} ;
+                                  Random random = new Random();
+                                  int randomportal = 0 ;
+                                  while (true) {
+                                      randomportal= random.nextInt(4);
+                                      if (portalallowd[randomportal]){
+                                          break;
+                                      }
+                                  }
+                                  moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).id + 1)%2].loc , Our_trap, spinList) ;
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
+                              }
+                              else {continue;}
+
                           } else if (arrowKey == 68 && allowedToMove[2]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Trap) {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).trap ;
@@ -565,15 +780,46 @@ public class Main implements GameBoard {
                                   randomLocSPN(spinList.get(0));
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Portal) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) +" and get into a Portal " ;
+                                  Log.writeMessage(message);
+                                  portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).checksides() ;
+                                  for (boolean i : portalallowd){
+                                      if (i) {
+                                          allowtouseportal += 1 ;
+                                      }
+                                  }
+                                  isportalused = true ;
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) ;
                                   Log.writeMessage(message);
                               }
-                              move(players[who_is_going_to_play], 'l', 1);
-                              if (flagspeqto2){
-                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              if (!isportalused) {
+                                  move(players[who_is_going_to_play], 'l', 1);
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
                               }
-                              break;
+                              if (allowtouseportal != 0){
+                                  char[] moveopt = {'u','d','l','r'} ;
+                                  Random random = new Random();
+                                  int randomportal = 0 ;
+                                  while (true) {
+                                      randomportal= random.nextInt(4);
+                                      if (portalallowd[randomportal]){
+                                          break;
+                                      }
+                                  }
+                                  moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).id + 1)%2].loc , Our_trap, spinList) ;
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
+                              }
+                              else {continue;}
                           } else if (arrowKey == 67 && allowedToMove[3]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Trap) {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).trap ;
@@ -600,15 +846,46 @@ public class Main implements GameBoard {
                                   randomLocSPN(spinList.get(0));
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Portal) {
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) +" and get into a Portal " ;
+                                  Log.writeMessage(message);
+                                  portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).checksides() ;
+                                  for (boolean i : portalallowd){
+                                      if (i) {
+                                          allowtouseportal += 1 ;
+                                      }
+                                  }
+                                  isportalused = true ;
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) ;
                                   Log.writeMessage(message);
                               }
-                              move(players[who_is_going_to_play], 'r', 1);
-                              if (flagspeqto2){
-                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              if (!isportalused) {
+                                  move(players[who_is_going_to_play], 'r', 1);
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
                               }
-                              break;
+                              if (allowtouseportal != 0){
+                                  char[] moveopt = {'u','d','l','r'} ;
+                                  Random random = new Random();
+                                  int randomportal = 0 ;
+                                  while (true) {
+                                      randomportal= random.nextInt(4);
+                                      if (portalallowd[randomportal]){
+                                          break;
+                                      }
+                                  }
+                                  moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).id + 1)%2].loc , Our_trap, spinList) ;
+                                  if (flagspeqto2){
+                                      players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                  }
+                                  break;
+                              }
+                              else {continue;}
                           }
                       }
 
@@ -741,16 +1018,49 @@ public class Main implements GameBoard {
                                               randomLocSPN(spinList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-2][players[who_is_going_to_play].cur_loc[1]] instanceof Portal) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get into a Portal " ;
+                                              Log.writeMessage(message);
+                                              portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-2][players[who_is_going_to_play].cur_loc[1]]).checksides() ;
+                                              for (boolean i : portalallowd){
+                                                  if (i) {
+                                                      allowtouseportal += 1 ;
+                                                  }
+                                              }
+                                              isportalused = true ;
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                               Log.writeMessage(message);
                                           }
-                                          move(players[who_is_going_to_play], 'u', 2);
-                                          if (flagspeqto2){
-                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          if (!isportalused) {
+                                              move(players[who_is_going_to_play], 'u', 2);
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
                                           }
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
-                                          break;
+                                          if (allowtouseportal != 0){
+                                              char[] moveopt = {'u','d','l','r'} ;
+                                              Random random = new Random();
+                                              int randomportal = 0 ;
+                                              while (true) {
+                                                  randomportal= random.nextInt(4);
+                                                  if (portalallowd[randomportal]){
+                                                      break;
+                                                  }
+                                              }
+                                              moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-2][players[who_is_going_to_play].cur_loc[1]]).id + 1)%2].loc , Our_trap, spinList) ;
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
+                                          }
+                                          else {continue;}
+
                                       } else if (arrowKey == 66 && allowedToJump[1]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]]).trap ;
@@ -776,16 +1086,50 @@ public class Main implements GameBoard {
                                               randomLocSPN(spinList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]] instanceof Portal) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and get into a Portal " ;
+                                              Log.writeMessage(message);
+                                              portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]]).checksides() ;
+                                              for (boolean i : portalallowd){
+                                                  if (i) {
+                                                      allowtouseportal += 1 ;
+                                                  }
+                                              }
+                                              isportalused = true ;
+
+                                          }
+
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                               Log.writeMessage(message);
                                           }
-                                          move(players[who_is_going_to_play], 'd', 2);
-                                          if (flagspeqto2){
-                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          if (!isportalused) {
+                                              move(players[who_is_going_to_play], 'd', 2);
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
                                           }
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
-                                          break;
+                                          if (allowtouseportal != 0){
+                                              char[] moveopt = {'u','d','l','r'} ;
+                                              Random random = new Random();
+                                              int randomportal = 0 ;
+                                              while (true) {
+                                                  randomportal= random.nextInt(4);
+                                                  if (portalallowd[randomportal]){
+                                                      break;
+                                                  }
+                                              }
+                                              moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]]).id + 1)%2].loc , Our_trap, spinList) ;
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
+                                          }
+                                          else {continue;}
+
                                       } else if (arrowKey == 68 && allowedToJump[2]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] - 2] instanceof Trap) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2]).trap ;
@@ -812,16 +1156,49 @@ public class Main implements GameBoard {
                                               randomLocSPN(spinList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2] instanceof Portal) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) +" and get into a Portal " ;
+                                              Log.writeMessage(message);
+                                              portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2]).checksides() ;
+                                              for (boolean i : portalallowd){
+                                                  if (i) {
+                                                      allowtouseportal += 1 ;
+                                                  }
+                                              }
+                                              isportalused = true ;
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) ;
                                               Log.writeMessage(message);
                                           }
-                                          move(players[who_is_going_to_play], 'l', 2);
-                                          if (flagspeqto2){
-                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          if (!isportalused) {
+                                              move(players[who_is_going_to_play], 'l', 2);
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
                                           }
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
-                                          break;
+                                          if (allowtouseportal != 0){
+                                              char[] moveopt = {'u','d','l','r'} ;
+                                              Random random = new Random();
+                                              int randomportal = 0 ;
+                                              while (true) {
+                                                  randomportal= random.nextInt(4);
+                                                  if (portalallowd[randomportal]){
+                                                      break;
+                                                  }
+                                              }
+                                              moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2]).id + 1)%2].loc , Our_trap, spinList) ;
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
+                                          }
+                                          else {continue;}
+
                                       } else if (arrowKey == 67 && allowedToJump[3]) {
                                           if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1] + 2] instanceof Trap) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) +" and damaged by a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2]).trap ;
@@ -848,16 +1225,48 @@ public class Main implements GameBoard {
                                               randomLocSPN(spinList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2] instanceof Portal) {
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) +" and get into a Portal " ;
+                                              Log.writeMessage(message);
+                                              portalallowd = ((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2]).checksides() ;
+                                              for (boolean i : portalallowd){
+                                                  if (i) {
+                                                      allowtouseportal += 1 ;
+                                                  }
+                                              }
+                                              isportalused = true ;
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) ;
                                               Log.writeMessage(message);
                                           }
-                                          move(players[who_is_going_to_play], 'r', 2);
-                                          if (flagspeqto2){
-                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          if (!isportalused) {
+                                              move(players[who_is_going_to_play], 'r', 2);
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
                                           }
-                                          players[who_is_going_to_play].specialMove[1] -= 1 ;
-                                          break;
+                                          if (allowtouseportal != 0){
+                                              char[] moveopt = {'u','d','l','r'} ;
+                                              Random random = new Random();
+                                              int randomportal = 0 ;
+                                              while (true) {
+                                                  randomportal= random.nextInt(4);
+                                                  if (portalallowd[randomportal]){
+                                                      break;
+                                                  }
+                                              }
+                                              moveWithPortal(players ,who_is_going_to_play,moveopt[randomportal],portals[(((Portal) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2]).id + 1)%2].loc , Our_trap, spinList) ;
+                                              if (flagspeqto2){
+                                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                              }
+                                              players[who_is_going_to_play].specialMove[1] -= 1 ;
+                                              break;
+                                          }
+                                          else {continue;}
                                       }
                                   }
                                   if (input_L == 'b') {
