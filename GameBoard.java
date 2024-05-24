@@ -23,8 +23,8 @@ public interface GameBoard {
                     System.out.print(game_board[rows][column]);
                 }
                 else {
-//                    System.out.print(" ? ");
-                    System.out.print(game_board[rows][column]);
+                    System.out.print(" ? ");
+//                    System.out.print(game_board[rows][column]);
 
                 }
                 System.out.print("║");
@@ -40,12 +40,12 @@ public interface GameBoard {
         }
     }
 
-    public static void main(String[] args) {
+//    public static void main(String[] args) {
 //        for (int rows = 0 ; rows < 10 ; rows++) {
 //            for (int column = 0; column < 20; column++) {
 //                game_board[rows][column] = "   ";
 //            }
 //        }
 //        print_gameboard();
-    }
+//    }
 }

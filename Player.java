@@ -55,7 +55,7 @@ public class Player {
         boolean[] alowed_to_move = {false,false,false,false,false,false,false};
         System.out.println("----------------"+this.toString()+"'s turn . Please make a move or use one of ypu special moves if you have some ----------------");
         if (this.cur_loc[0] != 0 ){
-            if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-1][cur_loc[1]] instanceof Player)) {
                 System.out.println("[↑] move Up");
                 alowed_to_move[0] = true ;
             }
@@ -69,7 +69,7 @@ public class Player {
             }
         }
         if (this.cur_loc[0] != 9){
-            if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]+1][cur_loc[1]] instanceof Player)) {
                 System.out.println("[↓] move down");
                 alowed_to_move[1] = true ;
             }
@@ -83,7 +83,7 @@ public class Player {
             }
         }
         if (this.cur_loc[1] != 0){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-1] instanceof Player)) {
                 System.out.println("[←] move left");
                 alowed_to_move[2] = true ;
             }
@@ -99,7 +99,7 @@ public class Player {
 
         }
         if (this.cur_loc[1] != 19){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+1] instanceof Player)) {
                 System.out.println("[→] move right");
                 alowed_to_move[3] = true ;
             }
@@ -190,7 +190,7 @@ public class Player {
 
         boolean [] alowed_to_move = {false,false,false,false} ;
         if (this.cur_loc[0] > 1 ){
-            if (!(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]-2][cur_loc[1]] instanceof Player)) {
                 System.out.println("[↑] Jump Up");
                 alowed_to_move[0] = true ;
             }
@@ -204,7 +204,7 @@ public class Player {
             }
         }
         if (this.cur_loc[0] < 8){
-            if (!(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]+2][cur_loc[1]] instanceof Player)) {
                 System.out.println("[↓] Jump down");
                 alowed_to_move[1] = true ;
             }
@@ -218,7 +218,7 @@ public class Player {
             }
         }
         if (this.cur_loc[1] > 1){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]][cur_loc[1]-2] instanceof Player)) {
                 System.out.println("[←] Jump left");
                 alowed_to_move[2] = true ;
             }
@@ -233,7 +233,7 @@ public class Player {
 
         }
         if (this.cur_loc[1] < 18){
-            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[cur_loc[0]][cur_loc[1]+2] instanceof Player)) {
                 System.out.println("[→] Jump right");
                 alowed_to_move[3] = true ;
             }

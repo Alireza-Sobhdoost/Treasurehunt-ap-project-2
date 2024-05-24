@@ -432,7 +432,7 @@ public class Main implements GameBoard {
     public static void someoneHaslost (Player player){
         System.out.println("==Trasure Hunt==");
         System.out.println("Sorry ! PL"+String.valueOf(player.playerId));
-        System.out.println("you are one of your losers ! maybe it wasn't your lucky day");
+        System.out.println("you are one of our losers ! maybe it wasn't your lucky day");
         player.haslose = true ;
 
 

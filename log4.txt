@@ -1,1 +1,5 @@
-PL1 in J1 has moved to I1
+PL2 in B20 has moved to B19
+PL3 in B1 has moved to B2 and get into a Portal 
+PL4 in I20 has moved to H20 and get the Treasure 
+PL1 in J1 has moved to J2 and damaged by a Bomb
+PL2 in A20 has moved to A19

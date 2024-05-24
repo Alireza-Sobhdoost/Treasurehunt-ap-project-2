@@ -1,6 +1,1 @@
-PL1 in J1 has moved to I1
-PL2 in A20 has moved to B20
-PL1 in I1 has moved to I2
-PL2 in B20 has moved to B19
-PL1 in I2 has moved to H2
-PL2 in B19 has moved to C19 and get the Treasure 
+PL1 in J2 has jumped to H2 and damaged by a TNT
