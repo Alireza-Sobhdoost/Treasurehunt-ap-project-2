@@ -1,2 +1,2 @@
-PL2 in A20 has jumped to A18
-PL1 in J1 has moved to J2 and get the Treasure 
+PL2 in B19 has moved to C19 and damaged by a MouseTrap
+PL1 in J16 has jumped to J14

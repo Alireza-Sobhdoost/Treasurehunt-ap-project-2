@@ -59,8 +59,12 @@ public class Player {
                 System.out.println("[↑] move Up");
                 alowed_to_move[0] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[↑] move Up to get treasure");
+                alowed_to_move[0] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]-1][cur_loc[1]].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[↑] move Up to get to the spin of chance");
                 alowed_to_move[0] = true ;
             }
         }
@@ -69,8 +73,12 @@ public class Player {
                 System.out.println("[↓] move down");
                 alowed_to_move[1] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[↓] move down to get treasure");
+                alowed_to_move[1] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]+1][cur_loc[1]].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[↓] move down to get to the spin of chance");
                 alowed_to_move[1] = true ;
             }
         }
@@ -79,10 +87,15 @@ public class Player {
                 System.out.println("[←] move left");
                 alowed_to_move[2] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[←] move left to get treasure");
                 alowed_to_move[2] = true ;
             }
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-1].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[←] move left to get to the spin of chance");
+                alowed_to_move[2] = true ;
+            }
+
 
         }
         if (this.cur_loc[1] != 19){
@@ -90,8 +103,12 @@ public class Player {
                 System.out.println("[→] move right");
                 alowed_to_move[3] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[→] move right to get treasure");
+                alowed_to_move[3] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+1].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[→] move right to get to the spin of chance");
                 alowed_to_move[3] = true ;
             }
         }
@@ -111,7 +128,7 @@ public class Player {
         return alowed_to_move ;
     }
     public  boolean[] Destruction (){
-        System.out.println("----------------"+this.toString()+"'s turn . Please choose a entity yo destroy ----------------");
+        System.out.println("----------------"+this.toString()+"'s turn . Please choose a entity to destroy ----------------");
         boolean[] alowed_to_destroy = {false,false,false,false} ;
         if (this.cur_loc[0] != 0 ){
             if (GameBoard.game_board[cur_loc[0]-1][cur_loc[1]] instanceof Wall) {
@@ -177,8 +194,12 @@ public class Player {
                 System.out.println("[↑] Jump Up");
                 alowed_to_move[0] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[↑] Jump Up to get treasure");
+                alowed_to_move[0] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]-2][cur_loc[1]].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[↑] Jump Up to get to the spin of chance");
                 alowed_to_move[0] = true ;
             }
         }
@@ -187,8 +208,12 @@ public class Player {
                 System.out.println("[↓] Jump down");
                 alowed_to_move[1] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[↓] Jump down to get treasure");
+                alowed_to_move[1] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]+2][cur_loc[1]].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[↓] Jump down to get to the spin of chance");
                 alowed_to_move[1] = true ;
             }
         }
@@ -197,8 +222,12 @@ public class Player {
                 System.out.println("[←] Jump left");
                 alowed_to_move[2] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[←] Jump left to get treasure");
+                alowed_to_move[2] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]-2].toString().equals( "\u001B[34m" + "SPN" + "\u001B[0m" ))) {
+                System.out.println("[←] Jump left to get to the spin of chance");
                 alowed_to_move[2] = true ;
             }
 
@@ -208,8 +237,12 @@ public class Player {
                 System.out.println("[→] Jump right");
                 alowed_to_move[3] = true ;
             }
-            if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals( "\u001B[32m" + "TRS" + "\u001B[0m" ))) {
                 System.out.println("[→] Jump right to get treasure");
+                alowed_to_move[3] = true ;
+            }
+            else if ((GameBoard.game_board[cur_loc[0]][cur_loc[1]+2].toString().equals("\u001B[34m" + "SPN" + "\u001B[0m"))) {
+                System.out.println("[→] Jump right to get to the spin of chance");
                 alowed_to_move[3] = true ;
             }
 
@@ -260,6 +293,8 @@ public class Player {
 
         gameboard[this.cur_loc[0]][this.cur_loc[1]] = "   " ;
         gameboard[this.src[0]][this.src[1]] = this ;
+        this.cur_loc[0] = this.src[0] ;
+        this.cur_loc[1] = this.src[1] ;
 
     }
 

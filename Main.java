@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Main implements GameBoard {
   // ANSI color codes
     public static int number_of_players ;
+    public static int randomIndexsp ;
 //    public static int who_is_going_to_play ;
     public static List<Treasure> TRSList ;
 
@@ -30,6 +31,79 @@ public class Main implements GameBoard {
 
          }
      }
+
+    public static String randomSpin (Player[] players , int turn , List<Trap> traplist ){
+         String chanceMessage ;
+        String[] messagelist = {" and added one of his/her special movements" , " ans backed to his/her source " , " and make other players to bach to their source " , " and removed 3 traps from the map " , " and added 3 traps to the map "} ;
+
+        Random random = new Random();
+        int randomIndexsp = random.nextInt(5) + 1;
+        System.out.println(randomIndexsp);
+        if (randomIndexsp == 1){
+            int random_ability = random.nextInt(3);
+            players[turn].specialMove[random_ability] += 1 ;
+            return messagelist[0];
+
+        }
+        else if (randomIndexsp == 2){
+            players[turn].BackToSrc(GameBoard.game_board);
+
+            return messagelist[1];
+        }
+        else if (randomIndexsp== 3){
+//            for (Player player : players){
+//                if (player != players[turn]) {
+//                    player.BackToSrc(GameBoard.game_board);
+//                }
+//            }
+            if (Main.number_of_players == 2) {
+                players[(turn+1)%2].BackToSrc(GameBoard.game_board);
+            }
+            else if (Main.number_of_players == 4) {
+                players[(turn+1)%4].BackToSrc(GameBoard.game_board);
+                players[(turn+2)%4].BackToSrc(GameBoard.game_board);
+                players[(turn+3)%4].BackToSrc(GameBoard.game_board);
+
+            }
+            return  messagelist[2];
+        }
+        else if (randomIndexsp == 4){
+            for (int i =0 ; i < 3 ; i++) {
+                int randomtrap = random.nextInt(traplist.size());
+                traplist.remove(randomtrap) ;
+            }
+            return messagelist[3];
+        }
+        else if (randomIndexsp == 5){
+            for (int i = 0 ; i < 3 ; i++) {
+                Trap mytrap ;
+                int randomtrap = random.nextInt(Trap.TrapTypeList.length);
+                if (Trap.TrapTypeList[randomtrap] == TrapType.MouseTrap) {
+                    mytrap = new Trap(TrapType.MouseTrap , true ,1, 5) ;
+                }
+                else if (Trap.TrapTypeList[randomtrap] == TrapType.Bomb) {
+                    mytrap = new Trap(TrapType.Bomb , true ,2, 10) ;
+                }
+                else {
+                    mytrap = new Trap(TrapType.TNT , false ,3, 15) ;
+                }
+                while (true) {
+                    int row = random.nextInt(10);
+                    int column = random.nextInt(20);
+                    if (GameBoard.game_board[row][column].equals("   ")) {
+                        GameBoard.game_board[row][column] = mytrap;
+                        break;
+                    }
+                }
+
+            }
+            return messagelist[4];
+        }
+
+        else {
+            return null ;
+        }
+    }
 
     public static Trap Spwan_trap() {
         Random random = new Random();
@@ -134,6 +208,17 @@ public class Main implements GameBoard {
              }
          }
      }
+    public static void randomLocSPN (Spin spin) {
+        Random random = new Random();
+        while (true) {
+            int row = random.nextInt(10);
+            int column = random.nextInt(20);
+            if (GameBoard.game_board[row][column].toString().equals("   ")) {
+                GameBoard.game_board[row][column] = spin;
+                break;
+            }
+        }
+    }
      public static void init_menu () {
          System.out.println("==Treasure Hunt==");
          System.out.println("Welcome to our game ! what do you want to do ?");
@@ -224,6 +309,7 @@ public class Main implements GameBoard {
       List<Wall> Our_wall = new ArrayList<>() ;
       List<Trap> Our_trap = new ArrayList<>();
       List<Treasure> Our_treasure = new ArrayList<>();
+      List<Spin> spinList = new ArrayList<>() ;
       int who_is_going_to_play = 0 ;
 
 //      System.out.println(ANSI_RED + "Red text" + ANSI_RESET);
@@ -275,6 +361,8 @@ public class Main implements GameBoard {
                   Our_trap = Trap.getTrapList();
                   Treasure TRS = new Treasure();
                   TRSList = Treasure.getTreasureList();
+                  Spin spin = new Spin();
+                  spinList = Spin.getSpinList() ;
 
                   if (number_of_players == 2) {
                       int[] src1 = {9,0};
@@ -303,6 +391,7 @@ public class Main implements GameBoard {
                   players = Player.getPlayerList().toArray(new Player[4]);
                   initial_set(number_of_players, players, Our_wall, Our_trap);
                   randomLocTRS(TRS);
+                  randomLocSPN(spin);
                   who_is_going_to_play = 0 ;
                   CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
                   CsvFileSaveandLoad.SaveStatus();
@@ -326,6 +415,7 @@ public class Main implements GameBoard {
                           Our_wall = Wall.getWallList();
                           Our_trap = Trap.getTrapList();
                           TRSList = Treasure.getTreasureList();
+                          spinList = Spin.getSpinList();
                           players = Player.getPlayerList().toArray(new Player[4]);
 //                          GameBoard.print_gameboard(a);
 //                          System.out.println(players[0].HpLeft);
@@ -366,6 +456,7 @@ public class Main implements GameBoard {
 
 
                   while (true) {
+                      boolean flagspeqto2 = false ;
                       GameBoard.print_gameboard(players[who_is_going_to_play].cur_loc);
                       status(players);
                       System.out.println(message);
@@ -394,12 +485,26 @@ public class Main implements GameBoard {
                                   randomLocTRS(TRSList.get(0)); ;
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Spin) {
+
+                                  String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                  if (randomIndexsp == 2){
+                                      flagspeqto2 = true;
+                                  }
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+                                  Log.writeMessage(message);
+                                  randomLocSPN(spinList.get(0));
+
+                              }
 
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                   Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'u', 1);
+                              if (flagspeqto2){
+                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              }
                               break;
                           } else if (arrowKey == 66 && allowedToMove[1]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Trap) {
@@ -417,11 +522,25 @@ public class Main implements GameBoard {
                                   randomLocTRS(TRSList.get(0)); ;
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] instanceof Spin) {
+                                  String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                  if (randomIndexsp == 2){
+                                      flagspeqto2 = true;
+                                  }
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+                                  Log.writeMessage(message);
+                                  randomLocSPN(spinList.get(0));
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                   Log.writeMessage(message);
                               }
+
                               move(players[who_is_going_to_play], 'd', 1);
+                              if (flagspeqto2){
+                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              }
                               break;
                           } else if (arrowKey == 68 && allowedToMove[2]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Trap) {
@@ -439,11 +558,21 @@ public class Main implements GameBoard {
                                   randomLocTRS(TRSList.get(0)); ;
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Spin) {
+                                  String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) +" and used the spin of chance" + chance ;
+                                  Log.writeMessage(message);
+                                  randomLocSPN(spinList.get(0));
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]) ;
                                   Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'l', 1);
+                              if (flagspeqto2){
+                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              }
                               break;
                           } else if (arrowKey == 67 && allowedToMove[3]) {
                               if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Trap) {
@@ -461,11 +590,24 @@ public class Main implements GameBoard {
                                   randomLocTRS(TRSList.get(0)); ;
 
                               }
+                              else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Spin) {
+                                  String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                  if (randomIndexsp == 2){
+                                      flagspeqto2 = true;
+                                  }
+                                  message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) +" and used the spin of chance" + chance ;
+                                  Log.writeMessage(message);
+                                  randomLocSPN(spinList.get(0));
+
+                              }
                               else {
                                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2) ;
                                   Log.writeMessage(message);
                               }
                               move(players[who_is_going_to_play], 'r', 1);
+                              if (flagspeqto2){
+                                  players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                              }
                               break;
                           }
                       }
@@ -588,11 +730,25 @@ public class Main implements GameBoard {
                                               randomLocTRS(TRSList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-2][players[who_is_going_to_play].cur_loc[1]] instanceof Spin) {
+
+                                              String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                              if (randomIndexsp ==2){
+                                                  flagspeqto2 = true;
+                                              }
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+                                              Log.writeMessage(message);
+                                              randomLocSPN(spinList.get(0));
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                               Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'u', 2);
+                                          if (flagspeqto2){
+                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          }
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 66 && allowedToJump[1]) {
@@ -610,11 +766,24 @@ public class Main implements GameBoard {
                                               players[who_is_going_to_play].ScoreEarned += ((Treasure) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0] + 2][players[who_is_going_to_play].cur_loc[1]]).Score_add;
                                               randomLocTRS(TRSList.get(0));
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+2][players[who_is_going_to_play].cur_loc[1]] instanceof Spin) {
+                                              String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                              if (randomIndexsp ==2){
+                                                  flagspeqto2 = true;
+                                              }
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) +" and used the spin of chance" + chance ;
+                                              Log.writeMessage(message);
+                                              randomLocSPN(spinList.get(0));
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+2].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) ;
                                               Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'd', 2);
+                                          if (flagspeqto2){
+                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          }
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 68 && allowedToJump[2]) {
@@ -633,11 +802,24 @@ public class Main implements GameBoard {
                                               randomLocTRS(TRSList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-2] instanceof Spin) {
+                                              String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                              if (randomIndexsp ==2){
+                                                  flagspeqto2 = true;
+                                              }
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) +" and used the spin of chance" + chance ;
+                                              Log.writeMessage(message);
+                                              randomLocSPN(spinList.get(0));
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]-1) ;
                                               Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'l', 2);
+                                          if (flagspeqto2){
+                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          }
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       } else if (arrowKey == 67 && allowedToJump[3]) {
@@ -656,11 +838,24 @@ public class Main implements GameBoard {
                                               randomLocTRS(TRSList.get(0));
 
                                           }
+                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+2] instanceof Spin) {
+                                              String chance = randomSpin(players,who_is_going_to_play,Our_trap) ;
+                                              if (randomIndexsp ==2){
+                                                  flagspeqto2 = true;
+                                              }
+                                              message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has moved to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) +" and used the spin of chance" + chance ;
+                                              Log.writeMessage(message);
+                                              randomLocSPN(spinList.get(0));
+
+                                          }
                                           else {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has jumped to " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+3) ;
                                               Log.writeMessage(message);
                                           }
                                           move(players[who_is_going_to_play], 'r', 2);
+                                          if (flagspeqto2){
+                                              players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
+                                          }
                                           players[who_is_going_to_play].specialMove[1] -= 1 ;
                                           break;
                                       }

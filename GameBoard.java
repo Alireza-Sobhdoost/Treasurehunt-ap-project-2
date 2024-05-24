@@ -23,8 +23,8 @@ public interface GameBoard {
                     System.out.print(game_board[rows][column]);
                 }
                 else {
-                    System.out.print(" ? ");
-//                    System.out.print(game_board[rows][column]);
+//                    System.out.print(" ? ");
+                    System.out.print(game_board[rows][column]);
 
                 }
                 System.out.print("║");

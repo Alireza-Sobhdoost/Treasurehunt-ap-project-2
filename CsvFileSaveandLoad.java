@@ -224,6 +224,10 @@ public class CsvFileSaveandLoad {
             Treasure treasure = new Treasure();
             return treasure;
         }
+        if (item.equals("\u001B[34m" + "SPN" + "\u001B[0m")) {
+            Spin spin = new Spin();
+            return spin;
+        }
         if (item.equals("\u001B[31m" + "MST" + "\u001B[0m")) {
             Trap trap = new Trap(TrapType.MouseTrap, true, 1, 5);
             return trap;
