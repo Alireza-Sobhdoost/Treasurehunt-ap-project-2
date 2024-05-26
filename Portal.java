@@ -25,22 +25,22 @@ public class Portal {
         boolean[] allowed_to_move = {false,false,false,false};
         Portal p = portals[(this.id + 1)%2];  // Fixed syntax error here
         if ( p.loc[0] != 0 ){
-            if (!(GameBoard.game_board[p.loc[0] -1][p.loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]-1][p.loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[p.loc[0] -1][p.loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]-1][p.loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[p.loc[0]-1][p.loc[1]] instanceof Player)) {
                 allowed_to_move[0] = true ;
             }
         }
         if (p.loc[0] != 9){
-            if (!(GameBoard.game_board[p.loc[0]+1][p.loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]+1][p.loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[p.loc[0]+1][p.loc[1]].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]+1][p.loc[1]].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[p.loc[0]+1][p.loc[1]] instanceof Player)) {
                 allowed_to_move[1] = true ;
             }
         }
         if (this.loc[1] != 0){
-            if (!(GameBoard.game_board[p.loc[0]][p.loc[1]-1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]][p.loc[1]-1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[p.loc[0]][p.loc[1]-1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]][p.loc[1]-1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[p.loc[0]][p.loc[1]-1] instanceof Player)) {
                 allowed_to_move[2] = true ;
             }
         }
         if (this.loc[1] != 19){
-            if (!(GameBoard.game_board[p.loc[0]][p.loc[1]+1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]][p.loc[1]+1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))) {
+            if (!(GameBoard.game_board[p.loc[0]][p.loc[1]+1].toString().equals("\u001B[33m" + "UWL" + "\u001B[0m")) && !(GameBoard.game_board[p.loc[0]][p.loc[1]+1].toString().equals("\u001B[33m" + "BWL" + "\u001B[0m"))&& !(GameBoard.game_board[p.loc[0]-1][p.loc[1]+1] instanceof Player)) {
                 allowed_to_move[3] = true ;
             }
         }

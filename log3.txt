@@ -1,4 +1,0 @@
-PL1 in J2 has moved to J3 and damaged by a MouseTrap
-PL2 in A20 has moved to B20
-PL3 in A1 has moved to B1
-PL4 in J20 has moved to I20
