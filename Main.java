@@ -547,37 +547,44 @@ public class Main implements GameBoard {
 //                  int[] a = {4, 10};
                   break;
               }
-              if (choice == 'l'){
-                  while (true) {
-                      CsvFileSaveandLoad.number_of_saves = CsvFileSaveandLoad.LoadStatus();
-                      CsvFileSaveandLoad.getSavedFiles() ;
-                      CsvFileSaveandLoad.SaveStatus();
-//                      System.out.println(numberOfSaves);
-                      int fileToLoad = scanner.nextInt();
-                      if (fileToLoad  <= CsvFileSaveandLoad.number_of_saves ) {
+              if (choice == 'l') {
+                  try {
+                      while (true) {
+                          CsvFileSaveandLoad.number_of_saves = CsvFileSaveandLoad.LoadStatus();
+                          CsvFileSaveandLoad.getSavedFiles();
+                          CsvFileSaveandLoad.SaveStatus();
+    //                      System.out.println(numberOfSaves);
+                          int fileToLoad = scanner.nextInt();
+                          if (fileToLoad <= CsvFileSaveandLoad.number_of_saves) {
 
-                          CsvFileSaveandLoad.LoadGame("game"+String.valueOf(fileToLoad)+".csv" , GameBoard.game_board );
-                          who_is_going_to_play = CsvFileSaveandLoad.getTurn() ;
-//                          number_of_players = CsvFileSaveandLoad.numberplayers ;
-//                          who_is_going_to_play = CsvFileSaveandLoad.turn ;
-                          int[] a = {0,0} ;
-                          Our_wall = Wall.getWallList();
-                          Our_trap = Trap.getTrapList();
-                          TRSList = Treasure.getTreasureList();
-                          spinList = Spin.getSpinList();
-                          portals = Portal.getPortals();
-                          players = Player.getPlayerList().toArray(new Player[4]);
-//                          GameBoard.print_gameboard(a);
-//                          System.out.println(players[0].HpLeft);
-                          break;
+                              CsvFileSaveandLoad.LoadGame("game" + String.valueOf(fileToLoad) + ".csv", GameBoard.game_board);
+                              who_is_going_to_play = CsvFileSaveandLoad.getTurn();
+    //                          number_of_players = CsvFileSaveandLoad.numberplayers ;
+    //                          who_is_going_to_play = CsvFileSaveandLoad.turn ;
+                              int[] a = {0, 0};
+                              Our_wall = Wall.getWallList();
+                              Our_trap = Trap.getTrapList();
+                              TRSList = Treasure.getTreasureList();
+                              spinList = Spin.getSpinList();
+                              portals = Portal.getPortals();
+                              players = Player.getPlayerList().toArray(new Player[4]);
+    //                          GameBoard.print_gameboard(a);
+    //                          System.out.println(players[0].HpLeft);
+                              break;
 
+                          }
                       }
+
+                      CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
+                      CsvFileSaveandLoad.SaveStatus();
+                      break;
+
+                  } catch (Exception e) {
+                      System.out.println("There is no game to load");
+                      init_menu();
+
                   }
-                  CsvFileSaveandLoad.SaveGame(GameBoard.game_board , number_of_players , who_is_going_to_play ,players);
-                  CsvFileSaveandLoad.SaveStatus();
 
-
-                  break;
 
               }
           }

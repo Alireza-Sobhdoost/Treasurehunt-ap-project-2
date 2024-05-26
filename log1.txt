@@ -1,0 +1,8 @@
+PL1 in J1 has moved to J2
+PL2 in A20 has moved to B20
+PL3 in A1 has moved to B1
+PL4 in J20 has moved to I20
+PL1 in J2 has moved to J3
+PL2 in B20 has used one of his/her Destructions and destroyed a MouseTrap in B19
+PL3 in B1 has moved to B2 and get into a Portal 
+PL4 in I20 has moved to I19 and get into a Portal 
