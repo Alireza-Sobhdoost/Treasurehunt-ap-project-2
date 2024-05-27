@@ -1,7 +1,0 @@
-PL2 in B20 has used one of his/her Destructions and destroyed a MouseTrap in B19
-PL3 in H19 has moved to I19 and get into a Portal 
-PL4 in A2 has jumped to A4
-PL1 in J3 has spwaned a Bomb in J2
-PL2 in B20 has moved to B19
-PL3 in C2 has moved to B2 and get into a Portal 
-PL4 in A4 has moved to A3 and damaged by a Bomb

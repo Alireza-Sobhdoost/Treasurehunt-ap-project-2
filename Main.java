@@ -454,12 +454,13 @@ public class Main implements GameBoard {
   public static void main(String[] args)  {
       AtomicBoolean stopMusic = new AtomicBoolean(false);
 
-      // Create a new thread to play music continuously
+      // Create a daemon thread to play music continuously
       Thread musicThread = new Thread(() -> {
           while (!stopMusic.get()) {
               Music.Play_misc();
           }
       });
+      musicThread.setDaemon(true);
       musicThread.start();
       Scanner scanner = new Scanner(System.in);
       List<Wall> Our_wall = new ArrayList<>() ;
@@ -492,7 +493,7 @@ public class Main implements GameBoard {
               }
               if (choice_exit == 'y') {
                   System.out.println("So goodbye !");
-                  musicThread.stop();
+                  stopMusic.set(true);
                   break;
               }
               if (choice_exit == 'n') {
@@ -1449,7 +1450,7 @@ public class Main implements GameBoard {
                           }
                           if (choise_in_exitgame == 'y'){
                               exit_has_calld = true ;
-                              musicThread.stop();
+                              stopMusic.set(true);
                               break;
                           }
 //
@@ -1483,9 +1484,9 @@ public class Main implements GameBoard {
               if (players[who_is_going_to_play].ScoreEarned >= 100) {
                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" has won ";
                   Log.writeMessage(message);
-                    andTheWinnerIs(players[who_is_going_to_play]);
-                  musicThread.stop();
-                    break;
+                  andTheWinnerIs(players[who_is_going_to_play]);
+                  stopMusic.set(true);
+                  break;
               }
               if (players[who_is_going_to_play].HpLeft <= 0) {
                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" has lost ";
@@ -1495,7 +1496,7 @@ public class Main implements GameBoard {
                       message = "PL"+String.valueOf(players[(who_is_going_to_play+1)%2].playerId)+" has won ";
                       Log.writeMessage(message);
                       andTheWinnerIs(players[(who_is_going_to_play+1)%2]);
-                      musicThread.stop();
+                      stopMusic.set(true);
                       break;
                   }
               }

@@ -14,3 +14,5 @@ PL2 in B17 has used one of his/her Destructions and destroyed a Bomb in B16
 PL3 in J20 has used one of his/her Destructions and destroyed a MouseTrap in J19
 PL4 in A1 has jumped to A3 and damaged by a Bomb
 PL1 in J3 has spwaned a MouseTrap in J2
+PL1 in J1 has moved to I1
+PL2 in A20 has moved to A19
