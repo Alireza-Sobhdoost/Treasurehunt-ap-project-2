@@ -1,0 +1,16 @@
+PL2 in B20 has moved to B19 and damaged by a MouseTrap
+PL3 in H19 has moved to I19 and get into a Portal 
+PL4 in A2 has moved to B2 and get into a Portal 
+PL1 in J3 has moved to J2
+PL2 in B19 has moved to B18
+PL3 in B1 has moved to B2 and get into a Portal 
+PL4 in I18 has moved to I19 and get into a Portal 
+PL1 in J2 has moved to J1
+PL2 in B18 has moved to B17
+PL3 in I20 has moved to J20
+PL4 in B1 has moved to A1
+PL1 in J1 has jumped to J3
+PL2 in B17 has used one of his/her Destructions and destroyed a Bomb in B16
+PL3 in J20 has used one of his/her Destructions and destroyed a MouseTrap in J19
+PL4 in A1 has jumped to A3 and damaged by a Bomb
+PL1 in J3 has spwaned a MouseTrap in J2

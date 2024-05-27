@@ -5,6 +5,7 @@ import java.awt.* ;
 import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class Main implements GameBoard {
@@ -315,7 +316,8 @@ public class Main implements GameBoard {
 
             GameBoard.game_board[src[0] - 1][src[1]] = players[who_is_going_to_play];
             GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
-            players[who_is_going_to_play].cur_loc[0] -= 1 ;
+            players[who_is_going_to_play].cur_loc[0] = src[0] -1 ;
+            players[who_is_going_to_play].cur_loc[1] = src[1] ;
             if (flagspeqto2){
                 players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
             }
@@ -348,7 +350,8 @@ public class Main implements GameBoard {
             }
             GameBoard.game_board[src[0] + 1][src[1]] = players[who_is_going_to_play];
             GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
-            players[who_is_going_to_play].cur_loc[0] += 1 ;
+            players[who_is_going_to_play].cur_loc[0] = src[0] +1 ;
+            players[who_is_going_to_play].cur_loc[1] = src[1] ;
             if (flagspeqto2){
                 players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
             }
@@ -381,7 +384,8 @@ public class Main implements GameBoard {
             }
             GameBoard.game_board[src[0]][src[1] - 1] = players[who_is_going_to_play];
             GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
-            players[who_is_going_to_play].cur_loc[1] -= 1  ;
+            players[who_is_going_to_play].cur_loc[0] = src[0] ;
+            players[who_is_going_to_play].cur_loc[1] = src[1] -1;
             if (flagspeqto2){
                 players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
             }
@@ -414,7 +418,8 @@ public class Main implements GameBoard {
             }
             GameBoard.game_board[src[0]][src[1] + 1] = players[who_is_going_to_play];
             GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]] = "   " ;
-            players[who_is_going_to_play].cur_loc[1] += 1  ;
+            players[who_is_going_to_play].cur_loc[0] = src[0] ;
+            players[who_is_going_to_play].cur_loc[1] = src[1] + 1;
             if (flagspeqto2){
                 players[who_is_going_to_play].BackToSrc(GameBoard.game_board);
             }
@@ -447,6 +452,15 @@ public class Main implements GameBoard {
 
 
   public static void main(String[] args)  {
+      AtomicBoolean stopMusic = new AtomicBoolean(false);
+
+      // Create a new thread to play music continuously
+      Thread musicThread = new Thread(() -> {
+          while (!stopMusic.get()) {
+              Music.Play_misc();
+          }
+      });
+      musicThread.start();
       Scanner scanner = new Scanner(System.in);
       List<Wall> Our_wall = new ArrayList<>() ;
       List<Trap> Our_trap = new ArrayList<>();
@@ -478,6 +492,7 @@ public class Main implements GameBoard {
               }
               if (choice_exit == 'y') {
                   System.out.println("So goodbye !");
+                  musicThread.stop();
                   break;
               }
               if (choice_exit == 'n') {
@@ -916,13 +931,13 @@ public class Main implements GameBoard {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
                                               Log.writeMessage(message);
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
-
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] = "   ";
                                           }
                                           else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Wall) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]-1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
                                               Log.writeMessage(message);
                                               Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]])) ;
-
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] = "   ";
                                           }
 //                                          move(players[who_is_going_to_play], 'u', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
@@ -932,13 +947,13 @@ public class Main implements GameBoard {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
                                               Log.writeMessage(message);
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]])) ;
-
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] = "   ";
                                           }
                                           else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]-1][players[who_is_going_to_play].cur_loc[1]] instanceof Wall) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]+1].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1)  ;
                                               Log.writeMessage(message);
                                               Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]])) ;
-
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]+1][players[who_is_going_to_play].cur_loc[1]] = "   ";
                                           }
 //                                          move(players[who_is_going_to_play], 'd', 1);
                                           players[who_is_going_to_play].specialMove[0] -= 1 ;
@@ -948,12 +963,14 @@ public class Main implements GameBoard {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1])  ;
                                               Log.writeMessage(message);
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] = "   ";
 
                                           }
                                          else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] instanceof Wall) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1])  ;
                                               Log.writeMessage(message);
                                               Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1] = "   ";
 
                                           }
 //                                          move(players[who_is_going_to_play], 'l', 1);
@@ -964,12 +981,14 @@ public class Main implements GameBoard {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).trap +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2)  ;
                                               Log.writeMessage(message);
                                               Our_trap.remove(((Trap) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]-1])) ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] = "   ";
 
                                           }
                                           else if (GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] instanceof Wall) {
                                               message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" in " + GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+1) + " has used one of his/her Destructions and destroyed a " + ((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1]).wall +" in " +GameBoard.row_log[players[who_is_going_to_play].cur_loc[0]].toString() + String.valueOf(players[who_is_going_to_play].cur_loc[1]+2)  ;
                                               Log.writeMessage(message);
                                               Our_wall.remove(((Wall) GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1])) ;
+                                              GameBoard.game_board[players[who_is_going_to_play].cur_loc[0]][players[who_is_going_to_play].cur_loc[1]+1] = "   ";
 
                                           }
 //                                          move(players[who_is_going_to_play], 'r', 1);
@@ -1430,6 +1449,7 @@ public class Main implements GameBoard {
                           }
                           if (choise_in_exitgame == 'y'){
                               exit_has_calld = true ;
+                              musicThread.stop();
                               break;
                           }
 //
@@ -1464,6 +1484,7 @@ public class Main implements GameBoard {
                   message = "PL"+String.valueOf(players[who_is_going_to_play].playerId)+" has won ";
                   Log.writeMessage(message);
                     andTheWinnerIs(players[who_is_going_to_play]);
+                  musicThread.stop();
                     break;
               }
               if (players[who_is_going_to_play].HpLeft <= 0) {
@@ -1474,6 +1495,7 @@ public class Main implements GameBoard {
                       message = "PL"+String.valueOf(players[(who_is_going_to_play+1)%2].playerId)+" has won ";
                       Log.writeMessage(message);
                       andTheWinnerIs(players[(who_is_going_to_play+1)%2]);
+                      musicThread.stop();
                       break;
                   }
               }
